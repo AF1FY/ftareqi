@@ -41,6 +41,10 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-athens-gray: var(--athens-gray);
+  --color-lavender-gray: var(--lavender-gray);
+  --color-pale-sky: var(--pale-sky);
+  --color-porcelain: var(--porcelain);
 }
 
 :root {
@@ -76,10 +80,15 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --athens-gray: #E5E7EB;
+  --lavender-gray: #D3D0D9;
+  --pale-sky: #6B7280;
+  --porcelain: #F6F7F8 ;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  /* --background: oklch(0.145 0 0); */
+  --background: #0E131B;
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -110,8 +119,10 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --athens-gray: #374151;
+  --porcelain: #181d25;
+  --pale-sky: #9CA3AF;
 }
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -119,4 +130,11 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.container{
+  @apply container mx-auto;
+}
+.my-icon{
+  fill: red;
 }
