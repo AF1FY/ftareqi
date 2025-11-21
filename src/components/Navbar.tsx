@@ -35,7 +35,7 @@ const Navbar = () => {
                                 }}> Logout </button>
                             </li>
                         </> : <>
-                            <li >
+                            <li hidden={path.includes('login')}>
                                 <Link href={'/login'}> Login </Link>
                             </li>
                             <li hidden={path.includes('register')}>
