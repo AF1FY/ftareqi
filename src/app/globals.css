@@ -45,6 +45,7 @@
   --color-lavender-gray: var(--lavender-gray);
   --color-pale-sky: var(--pale-sky);
   --color-porcelain: var(--porcelain);
+  --color-dodger-blue: var(--dodger-blue);
 }
 
 :root {
@@ -84,6 +85,7 @@
   --lavender-gray: #D3D0D9;
   --pale-sky: #6B7280;
   --porcelain: #F6F7F8 ;
+  --dodger-blue: #3B82F6;
 }
 
 .dark {
@@ -122,6 +124,7 @@
   --athens-gray: #374151;
   --porcelain: #181d25;
   --pale-sky: #9CA3AF;
+  --lavender-gray: #4B5563;
 }
 @layer base {
   * {

@@ -8,8 +8,6 @@ export interface LoginCredentials {
 export interface AuthResponse {
   success: boolean
   message: string
-  user?: {
-    id: string
-    phoneNumber: string
-  }
+  errors: string[]
+  data: {}
 }

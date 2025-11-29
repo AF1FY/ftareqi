@@ -3,113 +3,75 @@
 import { useLoginForm } from "../login/_hooks/useLoginForm"
 import InputField from "../login/_components/InputField"
 import PasswordInput from "../login/_components/PasswordInput"
-import Checkbox from "../login/_components/Checkbox"
 import PrimaryButton from "../login/_components/PrimaryButton"
-import SecondaryButton from '../login/_components/SecondaryButton'
 import Link from "next/link"
-import Image from "next/image"
-import { FaGoogle, FaPhone } from "react-icons/fa"
-import MapImage from '@/assets/login.png'
+import { FaPhone } from "react-icons/fa"
+import { toast } from "sonner"
 
 export default function LoginPage() {
-    const { formData, errors, isLoading, handleSubmit, handleInputChange } = useLoginForm()
+    const { formData, errors, isLoading, response, handleSubmit, handleInputChange } = useLoginForm()
 
+    if (response?.success) {
+        toast.success(response.message, { duration: 2500, position: 'top-right' });
+    }
+    else if (response?.success === false) {
+        console.log("Errors : ", response?.errors);
+        toast.error(response?.message, { duration: 2500, position: 'top-right' })
+    }
     return (
-        <div className="flex w-screen h-screen">
+        <div className="w-full max-w-md">
 
-            {/* Left side - Image */}
-            <div className="hidden lg:block relative w-1/2 h-full">
-                <Image
-                    src={MapImage}
-                    alt="Egypt Map"
-                    fill
-                    className="object-cover"
-                    priority
+            {/* Header */}
+            <div className="mb-8">
+                <h1 className="text-3xl md:text-4xl font-bold mb-2">Welcome Back</h1>
+                <p className="text-gray-600 dark:text-gray-300 text-sm md:text-base">Sign in to continue your journey.</p>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-5">
+
+                {/* Phone Number */}
+                <InputField
+                    label="Phone Number"
+                    type="tel"
+                    placeholder="Enter your phone number"
+                    value={formData.phoneNumber}
+                    onChange={(value) => handleInputChange("phoneNumber", value)}
+                    error={errors.phoneNumber}
+                    icon={<FaPhone className="text-gray-400 dark:text-gray-300" />}
+                    required
                 />
+
+                {/* Password */}
+                <PasswordInput
+                    label="Password"
+                    placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={(value) => handleInputChange("password", value)}
+                    error={errors.password}
+                    required
+                />
+                <div className="text-end me-1 text-dodger-blue hover:underline"><Link href={'/login/forgetPassword'}>Forgot Password?</Link></div>
+                {/* Sign in button */}
+                <PrimaryButton type="submit" disabled={isLoading}>
+                    Sign In
+                </PrimaryButton>
+
+            </form>
+
+            {/* Footer */}
+            <div className="mt-6 text-center">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                    Don't have an account?{" "}
+                    <Link
+                        href="/signup"
+                        className="text-blue-600 dark:text-blue-400 font-semibold hover:underline"
+                    >
+                        Sign Up
+                    </Link>
+                </p>
             </div>
 
-            {/* Right side - Login form */}
-            <div className="w-full lg:w-1/2 h-full flex items-center justify-center px-8 py-10 bg-[#F6F7F8]">
-                <div className="w-full max-w-md">
-
-                    {/* Header */}
-                    <div className="mb-8">
-                        <h1 className="text-3xl md:text-4xl font-bold text-black mb-2">Welcome Back</h1>
-                        <p className="text-gray-600 text-sm md:text-base">Sign in to continue your journey.</p>
-                    </div>
-
-                    {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-5">
-
-                        {/* Phone Number */}
-                        <InputField
-                            label="Phone Number"
-                            type="tel"
-                            placeholder="Enter your phone number"
-                            value={formData.phoneNumber}
-                            onChange={(value) => handleInputChange("phoneNumber", value)}
-                            error={errors.phoneNumber}
-                            icon={<FaPhone className="text-gray-400" />}
-                            required
-                        />
-
-                        {/* Password */}
-                        <PasswordInput
-                            label="Password"
-                            placeholder="Enter your password"
-                            value={formData.password}
-                            onChange={(value) => handleInputChange("password", value)}
-                            error={errors.password}
-                            required
-                        />
-
-                        {/* Remember Me + Forgot Password */}
-                        <div className="flex items-center justify-between">
-                            <Checkbox
-                                id="rememberMe"
-                                label="Remember me"
-                                checked={formData.rememberMe}
-                                onChange={(checked) => handleInputChange("rememberMe", checked)}
-                            />
-
-                            <Link
-                                href="/forgot-password"
-                                className="text-sm text-blue-600 hover:underline"
-                            >
-                                Forgot Password?
-                            </Link>
-                        </div>
-
-                        {/* Sign in button */}
-                        <PrimaryButton type="submit" disabled={isLoading}>
-                            Sign In
-                        </PrimaryButton>
-
-                        {/* Google button with real icon and darker background */}
-                        <SecondaryButton
-                            type="button"
-                            icon={<FaGoogle className="mr-2" />}
-                        >
-                            Continue with Google
-                        </SecondaryButton>
-
-                    </form>
-
-                    {/* Footer */}
-                    <div className="mt-6 text-center">
-                        <p className="text-sm text-gray-600">
-                            Don't have an account?{" "}
-                            <Link
-                                href="/signup"
-                                className="text-blue-600 font-semibold hover:underline"
-                            >
-                                Sign Up
-                            </Link>
-                        </p>
-                    </div>
-
-                </div>
-            </div>
         </div>
     )
 }
