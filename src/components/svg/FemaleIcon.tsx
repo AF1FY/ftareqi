@@ -1,6 +1,4 @@
-import React from "react";
-
-type IconProps = React.SVGProps<SVGSVGElement>;
+import IconProps from '@/types/Icons'
 
 export const FemaleIcon = ({ className, ...props }: IconProps) => {
     return (

@@ -1,17 +1,19 @@
 import { NextAuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { jwtDecode } from "jwt-decode";
+import { Tokens } from "./lib/token";
 
 const BASE_URL = process.env.BASE_URL;
 
 async function refreshAccessToken(token: any) {
     try {
-        console.log("------------- ⭐Refreshing Access Token⭐-------");
+        console.log("------------- ⭐Refreshing Access Token⭐-------\n\n\n");
         const response = await fetch(`${BASE_URL}/api/auth/token/refresh`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token: token.refreshToken }),
         });
+        console.log("Response from refresh token : ", response);
 
         const { data } = await response.json();
         console.log("Data from refresh token : ", data);
@@ -27,7 +29,7 @@ async function refreshAccessToken(token: any) {
             expiresIn: exp * 1000,
         };
     } catch (error) {
-        console.error("------------❗Error refreshing access token❗---------", error);
+        console.error("------------❗Error refreshing access token❗---------\n\n\n", error);
         return {
             ...token,
             isRefreshTokenExpired: true,
@@ -39,50 +41,33 @@ export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             credentials: {
-                phoneNumber: {},
-                password: {},
+                accessToken: {},
+                refreshToken: {},
             },
-
-            authorize: async (credentials) => {
-                console.log("-------------📢 NEXTAUTH AUTHORIZE STARTED");
-                try {
-                    const res = await fetch(`https://45e04bd41ad8.ngrok-free.app/api/auth/login`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            phoneNumber: credentials?.phoneNumber,
-                            password: credentials?.password
-                        }),
-                    });
-                    const { data } = await res.json();
-                    if (res.ok && data) {
-                        const { accessToken, refreshToken } = data;
-                        const { exp, sub }: { email: string; exp: number; sub: string } = jwtDecode(accessToken);
-                        return {
-                            id: sub,
-                            accessToken,
-                            refreshToken,
-                            expiresIn: exp * 1000,
-                            isRefreshTokenExpired: false
-                        }
-                    }
-                    return null;
-                } catch (e) {
-                    throw new Error("Error occured");
+            authorize: async (tokens) => {
+                console.log("-------------📢 NEXTAUTH AUTHORIZE STARTED\n\n\n\n");
+                const { accessToken, refreshToken } = tokens as Tokens;
+                const { exp, sub }: { exp: number, sub: string } = jwtDecode(accessToken);
+                return {
+                    id: sub,
+                    accessToken,
+                    refreshToken,
+                    expiresIn: exp * 1000,
+                    isRefreshTokenExpired: false
                 }
             },
         }),
     ],
+
     callbacks: {
         async jwt({ token, user }: { token: any, user: User }) {
-            console.log('-------------📢 JWT invoked --------------');
+            console.log('-------------📢 JWT invoked --------------\n\n\n\n');
             if (user) {
                 token.accessToken = user.accessToken
                 token.refreshToken = user.refreshToken
                 token.expiresIn = user.expiresIn
                 token.isRefreshTokenExpired = user.isRefreshTokenExpired
-                console.log("--------------⭐ Token ⭐---------------", token);
-                // return token;
+                console.log("--------------⭐ Token ⭐---------------\n", token);
             }
             console.log('Date.now() < token?.expiresIn : ', Date.now() < token?.expiresIn);
             console.log('Date.now() : ', Date.now());
@@ -90,15 +75,16 @@ export const authOptions: NextAuthOptions = {
             if (Date.now() < token?.expiresIn) {
                 return token;
             }
-            console.error("-------------❗ Access Token expired❗ ------------");
+            console.error("-------------❗ Access Token expired❗ ------------\n\n\n");
             return refreshAccessToken(token);
         },
         async session({ session, token }) {
             if (token) {
                 session.isRefreshTokenExpired = token.isRefreshTokenExpired;
+                session.refreshToken = token.refreshToken
                 session.accessToken = token.accessToken;
             }
-            console.log("--------------⭐ Session ⭐---------------", session);
+            console.log("--------------⭐ Session ⭐---------------\n", session);
             return session;
         },
     }

@@ -12,5 +12,6 @@ declare module "next-auth" {
     export interface Session {
         isRefreshTokenExpired: User.isRefreshTokenExpired;
         accessToken: User.accessToken;
+        refreshToken: User.refreshToken;
     }
 }

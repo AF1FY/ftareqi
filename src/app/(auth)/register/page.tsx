@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
-import { registerSchema, RegisterSchemaType } from '@/lib/validators/auth.schema';
+import { mapToRegistration, registerSchema, RegisterSchemaType } from '@/lib/validators/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Calendar } from "@/components/ui/calendar";
@@ -18,10 +18,13 @@ import { registerUser } from '@/lib/actions/Auth.actions';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { FemaleIcon } from '@/components/svg/FemaleIcon';
 import { MaleIcon } from '@/components/svg/MaleIcon';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
+import { PassengerIcon } from '@/components/svg/PassengerIcon';
+import { DriverIcon } from '@/components/svg/DriverIcon';
 
 const Register = () => {
   const [isPending, setIsPending] = useState(false)
-  const { updatePhoneNumber } = useContext(userContext);
+  const { updatePhoneNumber , updateRole } = useContext(userContext);
   const maxDate = new Date();
   const router = useRouter()
   maxDate.setFullYear(maxDate.getFullYear() - 18);
@@ -34,26 +37,29 @@ const Register = () => {
       phoneNumber: '01121276769',
       password: 'Ahmed@123',
       gender: 1,
+      role: 1,
     },
     resolver: zodResolver(registerSchema)
   })
 
   //* Registration
   async function handleRegister(user: RegisterSchemaType) {
+    console.log(user);
+    
     setIsPending(true);
-    user.phoneNumber = '+2'.concat(user.phoneNumber);
     try {
-      const res = await registerUser(user)
+      const res = await registerUser(mapToRegistration(user))
       console.log(res);
-      
+
       if (res.success) {
         toast.success(res.message, { duration: 7000, position: 'top-right' });
         updatePhoneNumber(user.phoneNumber);
+        updateRole(user.role);
         router.push('/register/verify');
-      } 
+      }
       else {
-        if(res.errors.length !== 0){
-          form.setError('phoneNumber',{
+        if (res.errors.length !== 0) {
+          form.setError('phoneNumber', {
             message: res.errors.at(0)
           })
           form.setFocus('phoneNumber')
@@ -102,7 +108,14 @@ const Register = () => {
                 <FormItem>
                   <FormLabel className='text-md'>Phone Number</FormLabel>
                   <FormControl>
-                    <Input className='bg-porcelain rounded-2xl focus-visible:ring-2 focus-visible:ring-lavender-gray' placeholder='e.g. 01012345678' type='tel' {...field} />
+                    {/* <Input className='bg-porcelain rounded-2xl focus-visible:ring-2 focus-visible:ring-lavender-gray' placeholder='e.g. 01012345678' type='tel' {...field} />
+                     */}
+                    <InputGroup className='bg-porcelain rounded-2xl focus-visible:ring-2 focus-visible:ring-lavender-gray overflow-hidden'>
+                      <InputGroupInput placeholder='e.g. 01012345678' type='tel' {...field} />
+                      <InputGroupAddon className='h-full pe-2 border-e border-e-lavender-gray text-foreground'>
+                        +20
+                      </InputGroupAddon>
+                    </InputGroup>
                   </FormControl>
                   <FormMessage className='text-start' />
                 </FormItem>
@@ -174,51 +187,90 @@ const Register = () => {
 
           {/* //* Gender  */}
           <FormField
-                control={form.control}
-                name="gender"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='text-md'>Gender</FormLabel>
-                    <FormControl>
-                      <ToggleGroup
-                        type="single"
-                        className="grid grid-cols-2 w-full"
-                        value={field.value?.toString()}
-                        onValueChange={(value) => {
-                          if (value) {
-                            field.onChange(Number(value));
-                          }
-                        }}
-                      >
-                        <ToggleGroupItem
-                          value="1"
-                          aria-label="Male"
-                          className="h-auto data-[state=on]:bg-foreground dark:data-[state=on]:bg-foreground data-[state=on]:text-background cursor-pointer bg-porcelain rounded-2xl"
-                        >
-                          <div className="flex items-center justify-center p-3 gap-2">
-                            <MaleIcon className='size-5'/>
-                            <span className="text-sm font-medium text-start">Male</span>
-                          </div>
-                        </ToggleGroupItem>
+            control={form.control}
+            name="gender"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='text-md'>Gender</FormLabel>
+                <FormControl>
+                  <ToggleGroup
+                    type="single"
+                    className="grid grid-cols-2 w-full"
+                    value={field.value?.toString()}
+                    onValueChange={(value) => {
+                      if (value) {
+                        field.onChange(Number(value));
+                      }
+                    }}
+                  >
+                    <ToggleGroupItem
+                      value="1"
+                      aria-label="Male"
+                      className="h-auto data-[state=on]:bg-foreground dark:data-[state=on]:bg-foreground data-[state=on]:text-background cursor-pointer bg-porcelain rounded-2xl"
+                    >
+                      <div className="flex items-center justify-center p-3 gap-2">
+                        <MaleIcon className='size-5' />
+                        <span className="text-sm font-medium text-start">Male</span>
+                      </div>
+                    </ToggleGroupItem>
 
-                        <ToggleGroupItem
-                          value="2"
-                          aria-label="Female"
-                          className="h-auto data-[state=on]:bg-foreground dark:data-[state=on]:bg-foreground data-[state=on]:text-background cursor-pointer bg-porcelain rounded-2xl"
-                        >
-                          <div className="flex items-center justify-center p-3 gap-2">
-                            <FemaleIcon className='size-5'/>
-                            <span className="text-sm font-medium text-start">Female</span>
-                          </div>
-                        </ToggleGroupItem>
-                        
-                      </ToggleGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                    <ToggleGroupItem
+                      value="2"
+                      aria-label="Female"
+                      className="h-auto data-[state=on]:bg-foreground dark:data-[state=on]:bg-foreground data-[state=on]:text-background cursor-pointer bg-porcelain rounded-2xl"
+                    >
+                      <div className="flex items-center justify-center p-3 gap-2">
+                        <FemaleIcon className='size-5' />
+                        <span className="text-sm font-medium text-start">Female</span>
+                      </div>
+                    </ToggleGroupItem>
 
+                  </ToggleGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* //* Role  */}
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='text-md'>I want to</FormLabel>
+                <FormControl>
+                  <ToggleGroup
+                    className='grid grid-cols-2 w-full'
+                    type='single'
+                    value={field.value?.toString()}
+                    onValueChange={(value) => {
+                      if (value) {
+                        field.onChange(Number(value));
+                      }
+                    }}
+                  >
+                    <ToggleGroupItem value='1' className='h-auto data-[state=on]:bg-foreground dark:data-[state=on]:bg-foreground data-[state=on]:text-background cursor-pointer bg-porcelain rounded-2xl'>
+                      <div className="flex items-center justify-center p-3 gap-2">
+                        <PassengerIcon className='size-7' />
+                        <span>Find Rides<br />
+                          (Passenger)</span>
+                      </div>
+                    </ToggleGroupItem>
+
+                    <ToggleGroupItem value='2' className='h-auto data-[state=on]:bg-foreground dark:data-[state=on]:bg-foreground data-[state=on]:text-background cursor-pointer bg-porcelain rounded-2xl'>
+                      <div className="flex items-center justify-center p-3 gap-2">
+                        <DriverIcon className='size-8' />
+                        <span>Offer Rides<br/>
+                          (Driver)</span>
+                      </div>
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
       </Form>
       <Button disabled={isPending} onClick={form.handleSubmit(handleRegister)} type="button" className="w-full cursor-pointer mt-8 py-5 rounded-2xl dark:bg-white text-xl hover:dark:bg-white/90">

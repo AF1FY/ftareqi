@@ -1,11 +1,12 @@
 "use server"
 
 import axios from "axios";
-import { LoginSchemaType, RegisterSchemaType, VerifyPhoneNumberSchemaType } from "../validators/auth.schema";
-import { AuthResponse } from "@/types/User";
+import { LoginSchemaType, RegisterSchemaAPIType, VerifyPhoneNumberSchemaType } from "../validators/auth.schema";
+import { AuthResponse, LoginResponse } from "@/types/User";
+import { getAuthTokens } from "../token";
 const BASE_URL = process.env.BASE_URL;
 //* Registration
-export async function registerUser(user: RegisterSchemaType): Promise<AuthResponse> {
+export async function registerUser(user: RegisterSchemaAPIType): Promise<AuthResponse> {
     try {
         return await axios.post(`${BASE_URL}/api/auth/register`,user)
             .then(response => {
@@ -55,20 +56,33 @@ export async function resendOTP(phoneNumber:string): Promise<AuthResponse> {
     }
 }
 //* Login
-export async function loginUser(credentials:LoginSchemaType): Promise<AuthResponse> {
+export async function loginUser(credentials:LoginSchemaType): Promise<LoginResponse> {
     try {
-        const res = await axios.post(`${BASE_URL}/api/auth/login`,credentials)
+        return await axios.post(`${BASE_URL}/api/auth/login`,credentials)
             .then(response => {
-                return response.data as AuthResponse;
+                return response.data;
             })
-            return {
-                ...res,
-                data: {}
-            }
     } catch (error: any) {
         return {
             success: false,
             message: error.response?.data?.message || "Invalid credentials!",
+            errors: error.response?.data?.errors || [],
+            data: null
+        };
+    }
+}
+//* Sign out
+export async function signOutUser(): Promise<AuthResponse> {
+    try {
+        const tokens = await getAuthTokens();
+        return await axios.post(`${BASE_URL}/api/auth/logout`,{token: tokens.refreshToken})
+            .then(response => {
+                return response.data;
+            })
+    } catch (error: any) {
+        return {
+            success: false,
+            message: error.response?.data?.message || "Operation failed",
             errors: error.response?.data?.errors || [],
             data: {}
         };

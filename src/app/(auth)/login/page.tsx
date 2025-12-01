@@ -51,7 +51,7 @@ export default function LoginPage() {
                     error={errors.password}
                     required
                 />
-                <div className="text-end me-1 text-dodger-blue hover:underline"><Link href={'/login/forgetPassword'}>Forgot Password?</Link></div>
+                <div className="text-end me-1 text-dodger-blue hover:underline"><Link href={'/login/forget-password'}>Forgot Password?</Link></div>
                 {/* Sign in button */}
                 <PrimaryButton type="submit" disabled={isLoading}>
                     Sign In

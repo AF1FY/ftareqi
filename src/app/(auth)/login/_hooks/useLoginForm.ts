@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useContext, useState } from "react"
 import type { LoginCredentials, AuthResponse } from "@/types/User"
-import { LoginSchemaType } from "@/lib/validators/auth.schema"
+import { formatPhoneNumber, LoginSchemaType } from "@/lib/validators/auth.schema"
 import { signIn } from "next-auth/react";
 import { loginUser, resendOTP } from "@/lib/actions/Auth.actions"
 import { toast } from "sonner"
@@ -19,7 +19,7 @@ export function useLoginForm() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [response] = useState<AuthResponse | null>(null)
-  const { updatePhoneNumber } = useContext(userContext);
+  const { updatePhoneNumber , role } = useContext(userContext);
   const router = useRouter();
 
   
@@ -47,20 +47,22 @@ export function useLoginForm() {
 
     if (!validateForm()) return
     const credentials = {
-      phoneNumber: '+2'.concat(formData.phoneNumber),
+      phoneNumber: formatPhoneNumber(formData.phoneNumber),
       password: formData.password
     }
     setIsLoading(true)
     try {
+      console.log(credentials);
       const res = await loginUser(credentials);
       if(res.success){
+        const tokens = {accessToken: res.data?.accessToken, refreshToken: res.data?.refreshToken};
         toast.success(res.message,{duration: 4000 , position: 'top-right'});
         const result = await signIn("credentials", {
-          ...credentials,
+          ...tokens,
           redirect: false,
           callbackUrl: '/'
         });
-        window.location.href = result?.url ?? "/";
+        window.location.href = role === 1 ? result?.url ?? "/" : '/driver-registration';
       }else if(res.errors.at(0)?.toLowerCase().includes('not confirmed')){
         await resendOTP(credentials.phoneNumber);
         updatePhoneNumber(credentials.phoneNumber);
