@@ -1,4 +1,4 @@
-import { Tokens } from "@/lib/token"
+import { Tokens } from "@/types/Auth";
 
 // User entity for domain layer
 export interface LoginCredentials {
@@ -16,4 +16,10 @@ export interface AuthResponse {
 
 export interface LoginResponse extends AuthResponse{
   data: Tokens | null
+}
+
+export interface Role{
+  Admin: 'Admin'
+  Moderator: 'Moderator'
+  User: 'User'
 }

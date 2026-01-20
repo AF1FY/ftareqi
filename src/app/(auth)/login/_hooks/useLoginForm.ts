@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useContext, useState } from "react"
-import type { LoginCredentials, AuthResponse } from "@/types/User"
+import type { LoginCredentials, AuthResponse } from "@/types/Auth"
 import { formatPhoneNumber, LoginSchemaType } from "@/lib/validators/auth.schema"
 import { signIn } from "next-auth/react";
 import { loginUser, resendOTP } from "@/lib/actions/Auth.actions"
@@ -19,10 +19,10 @@ export function useLoginForm() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [response] = useState<AuthResponse | null>(null)
-  const { updatePhoneNumber , role } = useContext(userContext);
+  const { updatePhoneNumber, role } = useContext(userContext);
   const router = useRouter();
 
-  
+
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
 
@@ -54,24 +54,28 @@ export function useLoginForm() {
     try {
       console.log(credentials);
       const res = await loginUser(credentials);
-      if(res.success){
-        const tokens = {accessToken: res.data?.accessToken, refreshToken: res.data?.refreshToken};
-        toast.success(res.message,{duration: 4000 , position: 'top-right'});
+      if (res.success) {
+        sessionStorage.setItem('login-toast', 'true');
+        const tokens = { 
+          accessToken: res.data?.accessToken,
+          refreshToken: res.data?.refreshToken,
+        };
         const result = await signIn("credentials", {
           ...tokens,
           redirect: false,
           callbackUrl: '/'
         });
         window.location.href = role === 1 ? result?.url ?? "/" : '/driver-registration';
-      }else if(res.errors.at(0)?.toLowerCase().includes('not confirmed')){
+      } else if (res.errors.at(0)?.toLowerCase().includes('not confirmed')) {
         await resendOTP(credentials.phoneNumber);
         updatePhoneNumber(credentials.phoneNumber);
-        toast.error('Phone number is not confirmed, We have send an OTP',{duration: 4000 , position: 'top-right'});
+        sessionStorage.setItem('phone-number', credentials.phoneNumber);
+        toast.error('Phone number is not confirmed, We have send an OTP', { duration: 4000, position: 'top-right' });
         router.push('/register/verify');
-      }else{
-        toast.error(res.errors.at(0) || res.message || 'Invalid Credentials!',{duration: 4000 , position: 'top-right'});
+      } else {
+        toast.error(res.errors.at(0) || res.message || 'Invalid Credentials!', { duration: 4000, position: 'top-right' });
       }
-      console.log("From login action : ",res);
+      console.log("From login action : ", res);
     } finally {
       setIsLoading(false)
     }

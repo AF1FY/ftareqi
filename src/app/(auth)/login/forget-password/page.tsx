@@ -4,32 +4,52 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { resetPassword, ResetPassword } from '@/lib/validators/auth.schema';
+import { requestOTP, RequestOTPSchemaType } from '@/lib/validators/auth.schema';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { requestOTPAsync } from '@/lib/actions/Auth.actions';
+import { toast } from 'sonner';
+import { userContext } from '@/context/userContext';
+import { useRouter } from 'next/navigation';
 
 const ForgetPasswordPage = () => {
-  const [isPending, setIsPending] = useState(false)
-
-  async function handleRequestOTP(phoneNumber:ResetPassword) {
-    
+  const [isPending, setIsPending] = useState(false);
+  const { updatePhoneNumber } = useContext(userContext);
+  const router = useRouter();
+  //* Requesting OTP
+  async function handleRequestOTP(formData: RequestOTPSchemaType) {
+    setIsPending(true);
+    const res = await requestOTPAsync(formData.phoneNumber);
+    if (res.success) {
+      toast.success(res.message, {position: 'top-right', duration: 3500 });
+      updatePhoneNumber(formData.phoneNumber);
+      sessionStorage.setItem('phone-number', formData.phoneNumber);
+      router.push('/login/otp');
+    } else {
+      toast.error(res.errors.at(0), { duration: 4000 });
+    }
+    setIsPending(false);
   }
-
-  const form = useForm<ResetPassword>({
+  //* Use Form
+  const form = useForm<RequestOTPSchemaType>({
     mode: 'onSubmit',
     defaultValues: {
       phoneNumber: ''
     },
-    resolver: zodResolver(resetPassword)
+    resolver: zodResolver(requestOTP)
   })
+
   return (
     <div className="w-full max-w-md bg-background rounded-2xl p-6 shadow-md">
-      <span className='flex items-center hover:underline'>
-        <Link href={'/login'} className=''> <i className="fa-solid fa-angle-left"></i>Back to login</Link>
-      </span>
+      <Link href={'/login'} className='group flex items-center py-2 rounded-full w-fit transition-colors cursor-pointer decoration-0'>
+        <i className="fa-solid fa-angle-left transition-transform duration-300 group-hover:-translate-x-1" />
+        <span className='max-w-0 overflow-hidden whitespace-nowrap opacity-0 group-hover:max-w-xs group-hover:opacity-100 transition-all duration-500 ease-in-out'>
+          <span>Back to login</span>
+        </span>
+      </Link>
       {/* Header */}
-      <div className="my-4">
+      <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Forgot your password?</h1>
         <p className="text-pale-sky text-sm md:text-base mb-4">Don't worry, happens to all of us. Enter your phone number below to recover your password</p>
       </div>

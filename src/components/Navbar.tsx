@@ -6,26 +6,47 @@ import { ModeToggle } from './ModeToggle';
 import { Button } from './ui/button';
 import Logo from './Logo';
 import { signOutUser } from '@/lib/actions/Auth.actions';
+import { toast } from 'sonner';
+import { useEffect } from 'react';
 const Navbar = () => {
     const session = useSession();
-    const handleSignout = async () => {
-        const res = await signOutUser();
-        console.log(res);
-        if(res.success){
-            const data = await signOut({callbackUrl:'/login'})
-            console.log(data);
-        }
-    }
     const path: string = usePathname();
     const isAuthenticated = !session.data?.isRefreshTokenExpired && session.status === 'authenticated';
+    //* Handling signout
+    const handleSignout = async () => {
+        const res = await signOutUser();
+        if (res.success) {
+            toast("See you soon!", { position: 'top-right', duration: 1900 });
+            setTimeout(async () => {
+                await signOut({ callbackUrl: '/login' })
+            }, 2000);
+        } else {
+            toast.error(res.message, { position: 'top-right', duration: 4000 });
+        }
+    }
+    //* After login
+    useEffect(() => {
+        const flag = sessionStorage.getItem('login-toast');
+        if (flag) {
+            setTimeout(() => {
+                toast('Welcome back!', { duration: 3000, position: 'top-right' });
+            }, 100);
+            sessionStorage.removeItem('login-toast');
+        }
+    }, []);
+    //* If refresh token is expired
+    useEffect(() => {
+        if (session.data?.isRefreshTokenExpired)
+            handleSignout();
+    }, [session.data?.isRefreshTokenExpired])
     return (
-        <nav className='py-2 bg-background shadow-sm shadow-athens-gray fixed w-full z-10'>
-            <div className='container mx-auto flex flex-col md:flex-row justify-between items-center gap-2'>
-                <Link href={'/'} className='w-2/12 md:w-1/12'>
+        <nav className='md:h-16 p-2 bg-background md:flex md:items-center border-b border-athens-gray flex-1 z-10'>
+            <div className='w-full px-2 mx-auto flex flex-col md:flex-row justify-between items-center gap-2'>
+                <Link href={'/'} className='w-32'>
                     <Logo />
                 </Link>
                 <div>
-                    <ul className='flex flex-col md:flex-row gap-4 items-center'>
+                    <ul className='flex flex-col md:flex-row gap-4 items-center font-bold'>
                         {isAuthenticated ? <>
                             {/* <li>
                                 <p className='text-(color:--color-main)'>Hi, {data?.user.name.split(' ')[0]}</p>
@@ -44,6 +65,9 @@ const Navbar = () => {
                             </li>
                         </>
                         }
+                        <li>
+                            <Link href={'/dashboard'} className='hover:underline'> Dashboard </Link>
+                        </li>
                         <li>
                             <ModeToggle />
                         </li>

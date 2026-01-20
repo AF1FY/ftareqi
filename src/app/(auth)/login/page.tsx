@@ -7,6 +7,7 @@ import PrimaryButton from "../login/_components/PrimaryButton"
 import Link from "next/link"
 import { FaPhone } from "react-icons/fa"
 import { toast } from "sonner"
+import { useEffect } from "react"
 
 export default function LoginPage() {
     const { formData, errors, isLoading, response, handleSubmit, handleInputChange } = useLoginForm()
@@ -64,7 +65,7 @@ export default function LoginPage() {
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                     Don't have an account?{" "}
                     <Link
-                        href="/signup"
+                        href="/register"
                         className="text-blue-600 dark:text-blue-400 font-semibold hover:underline"
                     >
                         Sign Up

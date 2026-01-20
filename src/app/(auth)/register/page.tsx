@@ -35,7 +35,7 @@ const Register = () => {
     defaultValues: {
       fullName: 'Ahmed Hisham',
       phoneNumber: '01121276769',
-      password: 'Ahmed@123',
+      password: 'User@123',
       gender: 1,
       role: 1,
     },
@@ -54,6 +54,7 @@ const Register = () => {
       if (res.success) {
         toast.success(res.message, { duration: 7000, position: 'top-right' });
         updatePhoneNumber(user.phoneNumber);
+        sessionStorage.setItem('phone-number',user.phoneNumber);
         updateRole(user.role);
         router.push('/register/verify');
       }

@@ -1,7 +1,7 @@
 import { NextAuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { jwtDecode } from "jwt-decode";
-import { Tokens } from "./lib/token";
+import { Tokens } from "./types/Auth";
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -13,10 +13,10 @@ async function refreshAccessToken(token: any) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token: token.refreshToken }),
         });
-        console.log("Response from refresh token : ", response);
+        // console.log("Response from refresh token : ", response);
 
         const { data } = await response.json();
-        console.log("Data from refresh token : ", data);
+        // console.log("Data from refresh token : ", data);
 
         if (!response.ok) {
             throw data;
@@ -47,9 +47,10 @@ export const authOptions: NextAuthOptions = {
             authorize: async (tokens) => {
                 console.log("-------------📢 NEXTAUTH AUTHORIZE STARTED\n\n\n\n");
                 const { accessToken, refreshToken } = tokens as Tokens;
-                const { exp, sub }: { exp: number, sub: string } = jwtDecode(accessToken);
+                const { exp, sub , role }: { exp: number, sub: string , role: string } = jwtDecode(accessToken);
                 return {
                     id: sub,
+                    role,
                     accessToken,
                     refreshToken,
                     expiresIn: exp * 1000,
@@ -63,6 +64,8 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, user }: { token: any, user: User }) {
             console.log('-------------📢 JWT invoked --------------\n\n\n\n');
             if (user) {
+                token.userId = user.id
+                token.role = user.role
                 token.accessToken = user.accessToken
                 token.refreshToken = user.refreshToken
                 token.expiresIn = user.expiresIn
@@ -80,6 +83,8 @@ export const authOptions: NextAuthOptions = {
         },
         async session({ session, token }) {
             if (token) {
+                session.userId = token.userId;
+                session.role = token.role;
                 session.isRefreshTokenExpired = token.isRefreshTokenExpired;
                 session.refreshToken = token.refreshToken
                 session.accessToken = token.accessToken;

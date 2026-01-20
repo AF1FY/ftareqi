@@ -33,7 +33,7 @@ const Loginlayout = ({
             </div>
 
             {/* Right side - Login form */}
-            <div className="w-full lg:w-1/2 h-full flex items-center justify-center px-8 py-10 bg-[#F6F7F8] dark:bg-[#0E131B] transition-colors">
+            <div className="w-full lg:w-1/2 h-full flex md:items-center justify-center px-8 py-10 bg-[#F6F7F8] dark:bg-[#0E131B] transition-colors">
                 <>
                     {children}
                 </>
