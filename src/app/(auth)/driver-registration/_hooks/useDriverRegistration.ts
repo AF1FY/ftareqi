@@ -1,23 +1,23 @@
-"use client" 
-import { useState } from "react"
-import { uploadDriverInfo, uploadCarDetails } from "../_lib/api-client" 
+"use client"
 
+import { useState } from "react"
+import { uploadDriverInfo, uploadCarDetails } from "../_lib/api-client"
+import { submitCarDetailsAsync, submitDriverProfile } from "@/lib/actions/Driver.actions"
+
+// Interface names now match Swagger exactly (case-sensitive)
 interface DriverFormData {
-  profilePhoto?: File | null
-  driverLicenseFront?: File | null
-  driverLicenseBack?: File | null
-  driverLicenseExpiry?: string
-  firstName?: string
-  lastName?: string
-  email?: string
-  phone?: string
-  carPhoto?: File | null
-  vehicleDocumentsFront?: File | null
-  vehicleDocumentsBack?: File | null
-  carBrand?: string
-  carColor?: string
-  carPlate?: string
-  numSeats?: string
+  DriverProfilePhoto?: File | null
+  DriverLicenseFront?: File | null
+  DriverLicenseBack?: File | null
+  LicenseExpiryDate?: string
+  CarPhoto?: File | null
+  CarLicenseFront?: File | null
+  CarLicenseBack?: File | null
+  Model?: string
+  Color?: string
+  Plate?: string
+  NumOfSeats?: string
+  CarLicenseExpiryDate?: string
 }
 
 export function useDriverRegistration() {
@@ -32,21 +32,22 @@ export function useDriverRegistration() {
     try {
       const data = new FormData()
 
-      if (formData.profilePhoto) data.append("profilePhoto", formData.profilePhoto)
-      if (formData.driverLicenseFront) data.append("driverLicenseFront", formData.driverLicenseFront)
-      if (formData.driverLicenseBack) data.append("driverLicenseBack", formData.driverLicenseBack)
-      if (formData.driverLicenseExpiry) data.append("driverLicenseExpiry", formData.driverLicenseExpiry)
+      // Now no mapping needed - names match Swagger directly
+      if (formData.DriverProfilePhoto) data.append("DriverProfilePhoto", formData.DriverProfilePhoto)
+      if (formData.DriverLicenseFront) data.append("DriverLicenseFront", formData.DriverLicenseFront)
+      if (formData.DriverLicenseBack) data.append("DriverLicenseBack", formData.DriverLicenseBack)
+      if (formData.LicenseExpiryDate) {
+        // Full ISO date-time format for Swagger string($date-time)
+        const formattedDate = `${formData.LicenseExpiryDate}T00:00:00.000Z`
+        data.append("LicenseExpiryDate", formattedDate)
+      }
 
-      data.append("firstName", formData.firstName || "")
-      data.append("lastName", formData.lastName || "")
-      data.append("email", formData.email || "")
-      data.append("phone", formData.phone || "")
+      console.log("Submitting driver info with FormData")
 
-      const result = await uploadDriverInfo(data)
+      const result = await submitDriverProfile(data);
 
-      if (result.success && result.driverId) {
-        setDriverId(result.driverId)
-        return { success: true, driverId: result.driverId }
+      if (result.success) {
+        return result;
       } else {
         setError(result.message)
         return { success: false, message: result.message }
@@ -61,27 +62,29 @@ export function useDriverRegistration() {
   }
 
   const submitCarDetails = async (formData: DriverFormData) => {
-    if (!driverId) {
-      setError("Driver ID not found. Please submit driver information first.")
-      return { success: false, message: "Driver ID not found" }
-    }
-
     setIsLoading(true)
     setError(null)
 
     try {
       const data = new FormData()
 
-      if (formData.carPhoto) data.append("carPhoto", formData.carPhoto)
-      if (formData.vehicleDocumentsFront) data.append("vehicleDocumentsFront", formData.vehicleDocumentsFront)
-      if (formData.vehicleDocumentsBack) data.append("vehicleDocumentsBack", formData.vehicleDocumentsBack)
+      if (formData.CarPhoto) data.append("CarPhoto", formData.CarPhoto)
+      if (formData.CarLicenseFront) data.append("CarLicenseFront", formData.CarLicenseFront)
+      if (formData.CarLicenseBack) data.append("CarLicenseBack", formData.CarLicenseBack)
 
-      data.append("carBrand", formData.carBrand || "")
-      data.append("carColor", formData.carColor || "")
-      data.append("carPlate", formData.carPlate || "")
-      data.append("numSeats", formData.numSeats || "")
+      if (formData.Model) data.append("Model", formData.Model)
+      if (formData.Color) data.append("Color", formData.Color)
+      if (formData.Plate) data.append("Plate", formData.Plate)
+      if (formData.NumOfSeats) data.append("NumOfSeats", formData.NumOfSeats)
 
-      const result = await uploadCarDetails(data, driverId)
+      if (formData.CarLicenseExpiryDate) {
+        const formattedDate = `${formData.CarLicenseExpiryDate}T00:00:00.000Z`
+        data.append("LicenseExpiryDate", formattedDate)
+      }
+
+      console.log("Submitting car details with FormData")
+
+      const result = await submitCarDetailsAsync(data);
 
       if (result.success) return { success: true, message: result.message }
       else {

@@ -55,6 +55,7 @@
   --color-approved-t: var(--approved-t);
   --color-rejected: var(--rejected);
   --color-rejected-t: var(--rejected-t);
+  --color-txt-secondary: var(--txt-secondary);
 }
 
 :root {
@@ -104,6 +105,7 @@
   --approved-t: #047857;
   --rejected: #ffe4e6;
   --rejected-t: #be123c;
+  --txt-secondary: #374151;
 }
 
 .dark {
@@ -145,6 +147,7 @@
   --pale-sky: #9CA3AF;
   --lavender-gray: #4B5563;
   --storm-cloud: #72788C;
+  --txt-secondary: #D1D5DB;
 }
 @layer base {
   * {

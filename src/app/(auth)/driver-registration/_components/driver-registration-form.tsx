@@ -6,53 +6,59 @@ import UploadSection from "./upload-section"
 import CarDetailsForm from "./car-details-form"
 import FormActions from "./form-actions"
 import { useDriverRegistration } from "../_hooks/useDriverRegistration"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
+// Interface now matches Swagger field names exactly
 interface FormData {
-  profilePhoto: File | null
-  driverLicenseFront: File | null
-  driverLicenseBack: File | null
-  driverLicenseExpiry: string
-  carPhoto: File | null
-  vehicleDocumentsFront: File | null
-  vehicleDocumentsBack: File | null
-  carBrand: string
-  carColor: string
-  carPlate: string
-  numSeats: string
+  DriverProfilePhoto: File | null
+  DriverLicenseFront: File | null
+  DriverLicenseBack: File | null
+  LicenseExpiryDate: string
+  CarPhoto: File | null
+  CarLicenseFront: File | null
+  CarLicenseBack: File | null
+  Model: string
+  Color: string
+  Plate: string
+  NumOfSeats: string
+  CarLicenseExpiryDate: string
   confirmAccurate: boolean
   uploadedFileNames: { [key: string]: string }
 }
 
 export default function DriverRegistrationForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
-    profilePhoto: null,
-    driverLicenseFront: null,
-    driverLicenseBack: null,
-    driverLicenseExpiry: "",
-    carPhoto: null,
-    vehicleDocumentsFront: null,
-    vehicleDocumentsBack: null,
-    carBrand: "",
-    carColor: "",
-    carPlate: "",
-    numSeats: "",
+    DriverProfilePhoto: null,
+    DriverLicenseFront: null,
+    DriverLicenseBack: null,
+    LicenseExpiryDate: "",
+    CarPhoto: null,
+    CarLicenseFront: null,
+    CarLicenseBack: null,
+    Model: "",
+    Color: "",
+    Plate: "",
+    NumOfSeats: "",
+    CarLicenseExpiryDate: "",
     confirmAccurate: false,
     uploadedFileNames: {},
   })
 
   const [preview, setPreview] = useState<string | null>(null)
   const [step, setStep] = useState<"driver" | "car">("driver")
-  const { submitDriverInfo, submitCarDetails, isLoading, error } = useDriverRegistration()
+  const { submitDriverInfo, submitCarDetails, isLoading, error } = useDriverRegistration();
 
   const handleFileUpload = (
     field: keyof Pick<
       FormData,
-      | "profilePhoto"
-      | "driverLicenseFront"
-      | "driverLicenseBack"
-      | "carPhoto"
-      | "vehicleDocumentsFront"
-      | "vehicleDocumentsBack"
+      | "DriverProfilePhoto"
+      | "DriverLicenseFront"
+      | "DriverLicenseBack"
+      | "CarPhoto"
+      | "CarLicenseFront"
+      | "CarLicenseBack"
     >,
     file: File
   ) => {
@@ -62,7 +68,7 @@ export default function DriverRegistrationForm() {
       uploadedFileNames: { ...prev.uploadedFileNames, [field]: file.name },
     }))
 
-    if (field === "carPhoto" || field === "profilePhoto") {
+    if (field === "DriverProfilePhoto" || field === "CarPhoto") {
       const reader = new FileReader()
       reader.onload = e => setPreview(e.target?.result as string)
       reader.readAsDataURL(file)
@@ -70,7 +76,7 @@ export default function DriverRegistrationForm() {
   }
 
   const handleInputChange = (
-    field: keyof Pick<FormData, "carBrand" | "carColor" | "carPlate" | "numSeats" | "driverLicenseExpiry">,
+    field: keyof Pick<FormData, "Model" | "Color" | "Plate" | "NumOfSeats" | "LicenseExpiryDate" | "CarLicenseExpiryDate">,
     value: string
   ) => setFormData(prev => ({ ...prev, [field]: value }))
 
@@ -79,7 +85,7 @@ export default function DriverRegistrationForm() {
 
   const handleSubmitDriver = async () => {
     try {
-      if (!formData.driverLicenseFront || !formData.driverLicenseBack || !formData.driverLicenseExpiry) {
+      if (!formData.DriverLicenseFront || !formData.DriverLicenseBack || !formData.LicenseExpiryDate) {
         alert("Please upload both sides of your driver's license and enter the expiry date")
         return
       }
@@ -88,11 +94,10 @@ export default function DriverRegistrationForm() {
       const result = await submitDriverInfo(formData)
 
       if (result?.success) {
-        console.log("Driver info saved successfully")
+        toast.success("Driver info saved successfully");
         setStep("car")
       } else {
-        console.warn("Driver API failed:", result)
-        alert(result?.message || "Something went wrong, please try again")
+        console.error("Driver API failed:", result);
       }
     } catch (err) {
       console.error("Error submitting driver info:", err)
@@ -103,16 +108,16 @@ export default function DriverRegistrationForm() {
   const handleSubmitCar = async () => {
     try {
       if (
-        !formData.vehicleDocumentsFront ||
-        !formData.vehicleDocumentsBack ||
-        !formData.carPhoto
+        !formData.CarLicenseFront ||
+        !formData.CarLicenseBack ||
+        !formData.CarPhoto
       ) {
         alert("Please upload vehicle photos and documents")
         return
       }
 
-      if (!formData.carBrand || !formData.carColor || !formData.carPlate || !formData.numSeats) {
-        alert("Please fill in all car details")
+      if (!formData.Model || !formData.Color || !formData.Plate || !formData.NumOfSeats || !formData.CarLicenseExpiryDate) {
+        alert("Please fill in all car details including expiry date")
         return
       }
 
@@ -125,20 +130,23 @@ export default function DriverRegistrationForm() {
       const result = await submitCarDetails(formData)
 
       if (result?.success) {
-        alert("Registration completed successfully")
-        setStep("driver")
+        toast.success("Registration completed successfully" , {position: 'top-right'})
+        setTimeout(() => {
+          router.push('/home');
+        }, 1500);
         setFormData({
-          profilePhoto: null,
-          driverLicenseFront: null,
-          driverLicenseBack: null,
-          driverLicenseExpiry: "",
-          carPhoto: null,
-          vehicleDocumentsFront: null,
-          vehicleDocumentsBack: null,
-          carBrand: "",
-          carColor: "",
-          carPlate: "",
-          numSeats: "",
+          DriverProfilePhoto: null,
+          DriverLicenseFront: null,
+          DriverLicenseBack: null,
+          LicenseExpiryDate: "",
+          CarPhoto: null,
+          CarLicenseFront: null,
+          CarLicenseBack: null,
+          Model: "",
+          Color: "",
+          Plate: "",
+          NumOfSeats: "",
+          CarLicenseExpiryDate: "",
           confirmAccurate: false,
           uploadedFileNames: {},
         })
@@ -170,22 +178,22 @@ export default function DriverRegistrationForm() {
               title="Profile Photo"
               label="Upload Profile Photo (Optional)"
               icon={User}
-              fileName={formData.uploadedFileNames["profilePhoto"]}
-              onUpload={file => handleFileUpload("profilePhoto", file)}
+              fileName={formData.uploadedFileNames["DriverProfilePhoto"]}
+              onUpload={file => handleFileUpload("DriverProfilePhoto", file)}
             />
             <UploadSection
               title="Driver's License Front"
               label="Upload Front Side of License"
               icon={FileText}
-              fileName={formData.uploadedFileNames["driverLicenseFront"]}
-              onUpload={file => handleFileUpload("driverLicenseFront", file)}
+              fileName={formData.uploadedFileNames["DriverLicenseFront"]}
+              onUpload={file => handleFileUpload("DriverLicenseFront", file)}
             />
             <UploadSection
               title="Driver's License Back"
               label="Upload Back Side of License"
               icon={FileText}
-              fileName={formData.uploadedFileNames["driverLicenseBack"]}
-              onUpload={file => handleFileUpload("driverLicenseBack", file)}
+              fileName={formData.uploadedFileNames["DriverLicenseBack"]}
+              onUpload={file => handleFileUpload("DriverLicenseBack", file)}
             />
             <div>
               <label className="text-gray-700 dark:text-gray-300 text-xs mb-1 block">
@@ -193,8 +201,8 @@ export default function DriverRegistrationForm() {
               </label>
               <input
                 type="date"
-                value={formData.driverLicenseExpiry}
-                onChange={e => handleInputChange("driverLicenseExpiry", e.target.value)}
+                value={formData.LicenseExpiryDate}
+                onChange={e => handleInputChange("LicenseExpiryDate", e.target.value)}
                 className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:bg-[#111827] dark:text-gray-100 dark:border-gray-600"
               />
             </div>
@@ -202,7 +210,7 @@ export default function DriverRegistrationForm() {
 
           <div className="flex items-center justify-center bg-gray-50 dark:bg-[#111827] rounded-2xl min-h-64 border">
             {preview ? (
-              <img src={preview} className="w-full h-full object-cover rounded-2xl" />
+              <img src={preview || "/placeholder.svg"} className="w-full h-full object-cover rounded-2xl" />
             ) : (
               <div className="text-center">
                 <ImageIcon className="w-6 h-6 text-gray-400 mx-auto mb-2" />
@@ -219,28 +227,28 @@ export default function DriverRegistrationForm() {
                 title="Car Photo"
                 label="Upload Car Photo"
                 icon={Camera}
-                fileName={formData.uploadedFileNames["carPhoto"]}
-                onUpload={file => handleFileUpload("carPhoto", file)}
+                fileName={formData.uploadedFileNames["CarPhoto"]}
+                onUpload={file => handleFileUpload("CarPhoto", file)}
               />
               <UploadSection
                 title="Vehicle Documents Front"
                 label="Upload Front Side of Vehicle Docs"
                 icon={File}
-                fileName={formData.uploadedFileNames["vehicleDocumentsFront"]}
-                onUpload={file => handleFileUpload("vehicleDocumentsFront", file)}
+                fileName={formData.uploadedFileNames["CarLicenseFront"]}
+                onUpload={file => handleFileUpload("CarLicenseFront", file)}
               />
               <UploadSection
                 title="Vehicle Documents Back"
                 label="Upload Back Side of Vehicle Docs"
                 icon={File}
-                fileName={formData.uploadedFileNames["vehicleDocumentsBack"]}
-                onUpload={file => handleFileUpload("vehicleDocumentsBack", file)}
+                fileName={formData.uploadedFileNames["CarLicenseBack"]}
+                onUpload={file => handleFileUpload("CarLicenseBack", file)}
               />
             </div>
 
             <div className="flex items-center justify-center bg-gray-50 dark:bg-[#111827] rounded-2xl min-h-64 border">
               {preview ? (
-                <img src={preview} className="w-full h-full object-cover rounded-2xl" />
+                <img src={preview || "/placeholder.svg"} className="w-full h-full object-cover rounded-2xl" />
               ) : (
                 <div className="text-center">
                   <ImageIcon className="w-6 h-6 text-gray-400 mx-auto mb-2" />
@@ -252,7 +260,17 @@ export default function DriverRegistrationForm() {
 
           <div className="grid grid-cols-2 gap-8 mb-8">
             <CarDetailsForm formData={formData} onInputChange={handleInputChange} />
-            <div />
+            <div>
+              <label className="text-gray-700 dark:text-gray-300 text-xs mb-1 block">
+                Car License Expiry Date
+              </label>
+              <input
+                type="date"
+                value={formData.CarLicenseExpiryDate}
+                onChange={e => handleInputChange("CarLicenseExpiryDate", e.target.value)}
+                className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:bg-[#111827] dark:text-gray-100 dark:border-gray-600"
+              />
+            </div>
           </div>
 
           <div className="flex items-center gap-2 mb-8">

@@ -12,7 +12,7 @@ function Sidebar({ children, expanded, toggleSidebar }:{ children:any, expanded:
                     title={expanded ? "Collapse sidebar" : "Expand sidebar"}
                 >
                     {/*//*  Project logo */}
-                    <div className="min-w-8 min-h-8 bg-dodger-blue text-background flex items-center justify-center rounded-lg shadow-md">
+                    <div className="min-w-8 min-h-8 bg-foreground text-background flex items-center justify-center rounded-lg shadow-md">
                         <LayoutDashboard size={20} />
                     </div>
 

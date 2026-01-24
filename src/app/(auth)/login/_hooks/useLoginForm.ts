@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useContext, useState } from "react"
-import type { LoginCredentials, AuthResponse } from "@/types/Auth"
+import type { LoginCredentials, AuthResponse, Tokens } from "@/types/Auth"
 import { formatPhoneNumber, LoginSchemaType } from "@/lib/validators/auth.schema"
 import { signIn } from "next-auth/react";
 import { loginUser, resendOTP } from "@/lib/actions/Auth.actions"
@@ -18,7 +18,7 @@ export function useLoginForm() {
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
-  const [response] = useState<AuthResponse | null>(null)
+  const [response] = useState<AuthResponse<Tokens> | null>(null)
   const { updatePhoneNumber, role } = useContext(userContext);
   const router = useRouter();
 

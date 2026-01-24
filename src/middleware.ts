@@ -19,7 +19,7 @@ export async function middleware(req: NextRequest) {
     // 3. Define allowed roles for the dashboard
     const dashboardRoles = ["Admin", "Moderator"];
     const hasAccess = userRoles.some(role => dashboardRoles.includes(role));
-
+    const isAdmin = userRoles.includes('Admin');
     // --- Guards Logic ---
 
     // Dashboard Guard: Protect all /dashboard routes
@@ -28,7 +28,7 @@ export async function middleware(req: NextRequest) {
             return NextResponse.redirect(new URL("/login", req.url));
         }
 
-        if (!hasAccess) {
+        if (!hasAccess || (pathname.includes('users') && !isAdmin)) {
             // Using rewrite to keep the URL but show the Forbidden content
             return NextResponse.rewrite(new URL("/forbidden", req.url));
         }

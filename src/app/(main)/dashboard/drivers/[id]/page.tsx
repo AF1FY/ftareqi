@@ -4,11 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react'
-import CarDetails from '../../_components/CarDetails';
-import DriverDetails from '../../_components/DriverDetails';
+import CarDetails from '../../_components/Driver Profile/CarDetails';
+import DriverDetails from '../../_components/Driver Profile/DriverDetails';
 import { mapToCarDetails, mapToDriverDetails } from '@/lib/services/moderatorService';
 import { CarDetailsType, DriverDetailsType } from '@/types/Moderator';
-import { ProfileImageWithLightbox } from '../../_components/ProfileImageWithLightbox';
+import { ProfileImageWithLightbox } from '../../_components/Driver Profile/ProfileImageWithLightbox';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
 const layout = () => {
@@ -43,14 +43,14 @@ const layout = () => {
         setIsPending(true);
         isApproved ? setIsApproving(true) : setIsRejecting(true);
         const res = await approveDriverAsync(id, isApproved);
-        if(res.success){
-            toast.success(res.message , {position:'top-right'});
+        if (res.success) {
+            toast.success(res.message, { position: 'top-right' });
             router.refresh();
             setTimeout(() => {
                 router.back();
             }, 1500);
         }
-        else{
+        else {
             toast.error(res.message ?? res.errors[0] ?? "Network error occurred")
         }
         setIsPending(false);

@@ -4,6 +4,7 @@ export interface DriverRequestItem {
     fullName: string;
     phoneNumber: string;
     createdAt: string;
+    driverPhoto: string
 }
 export interface PaginatedData<T> {
     items: T[];
@@ -18,9 +19,15 @@ export interface GetDriversParams {
     descending: boolean;
 }
 export enum DriverStatus {
-    Pending = 0,
-    Approved = 1,
-    Rejected = 2,
+    Pending = 'Pending',
+    Active = 'Active',
+    Rejected = 'Rejected',
+}
+export const StatusStyles: Record<string, string> = {
+    [DriverStatus.Pending]: 'bg-pending text-pending-t',
+    [DriverStatus.Active]: 'bg-approved text-approved-t',
+    [DriverStatus.Rejected]: 'bg-rejected text-rejected-t',
+    ['null']: 'bg-gray-100 text-gray-600'
 }
 export interface DriverDetailsType {
     fullName: string;
@@ -41,7 +48,7 @@ export interface CarDetailsType {
     carLicenseFront: string;
     carLicenseBack: string;
 }
-export interface DriverProfileDetails extends DriverDetailsType , CarDetailsType {
+export interface DriverProfileDetails extends DriverDetailsType, CarDetailsType {
     profileId: number;
 }
 export const CAR_COLORS_MAP: Record<string, string> = {

@@ -4,21 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { getPendingDriversAsync } from '@/lib/actions/Moderator.actions';
 import { useRouter } from 'next/navigation';
 
-const USE_MOCK_DATA = false;
-
-const generateMockData = (page: number, pageSize: number) => {
-  const totalItems = 100;
-  const totalPages = Math.ceil(totalItems / pageSize);
-  const items = Array.from({ length: pageSize }, (_, i) => ({
-    driverProfileId: (page - 1) * pageSize + i + 1,
-    fullName: `Driver Name ${(page - 1) * pageSize + i + 1}`,
-    phoneNumber: `010000000${(page - 1) * pageSize + i}`,
-    createdAt: new Date(Date.now() - Math.floor(Math.random() * 10000000000)).toISOString()
-  }));
-
-  return { items, page, pageSize, totalCount: totalItems, totalPages };
-};
-
 export default function DriversRequestsPage() {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(10);
@@ -29,13 +14,8 @@ export default function DriversRequestsPage() {
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['pendingDrivers', page, pageSize, descending],
     queryFn: async () => {
-      if (USE_MOCK_DATA) {
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        return generateMockData(page, pageSize);
-      }
       try {
         const response = await getPendingDriversAsync({ page, pageSize, descending });
-        console.log("getPendingDriversAsync : ",response);
         if (!response.success) {
           throw new Error(response.errors?.join(', ') || response.message || 'Unknown Error');
         }
@@ -79,7 +59,7 @@ export default function DriversRequestsPage() {
             <h1 className="text-3xl font-bold tracking-tight">Pending Driver Requests</h1>
             <p className='text-pale-sky ms-1'>View and manage all driver profiles in the system.</p>
           </div>
-          {/* إخفاء العداد في حالة التحميل أو الخطأ */}
+          {/*//! Hiding counter if there is error */}
           {!isLoading && !isError && (
             <span className="bg-dodger-blue text-white text-xs font-semibold px-2 py-1 rounded">
               Total requests: {data?.totalCount || 0}
@@ -90,7 +70,7 @@ export default function DriversRequestsPage() {
         {/*//* Content Area (Error or Table) */}
         <div className="shadow-sm rounded-lg border border-athens-gray overflow-hidde mb-6 bg-background">
 
-          {/* 1. Error State Message */}
+          {/*//! 1. Error State Message */}
           {isError ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <div className="bg-red-50 p-4 rounded-full mb-3">
@@ -109,7 +89,7 @@ export default function DriversRequestsPage() {
               </button>
             </div>
           ) : (
-            /* 2. Table Area */
+            /*//* 2. Table Area */
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-athens-gray">
                 <thead className="bg-athens-gray/10">
@@ -167,10 +147,10 @@ export default function DriversRequestsPage() {
                       </tr>
                     ))
                   )}
-                  {/* Empty State */}
+                  {/*//~ Empty State */}
                   {!isLoading && data?.items?.length === 0 && (
                     <tr>
-                      <td colSpan={3} className="flex-col px-6 py-12 text-center text-pale-sky">
+                      <td colSpan={3} className="flex-col px-6 py-12 text-center text-pale-sky rounded-b-full">
                         <i className="block mb-4 text-4xl fa-regular fa-folder-open"></i>
                         <div>No pending requests found.</div>
                       </td>

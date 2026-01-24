@@ -1,16 +1,16 @@
 import Link from 'next/link';
 
-function SidebarItem({ href, icon, text, active, alert, expanded }: { href: string, icon?: any, text?: any, active?: any, alert?: any, expanded?: any }) {
+function SidebarItem({ href, icon, text, active, alert, expanded , hidden = false }: { href: string, icon?: any, text?: any, active?: boolean, alert?: any, expanded?: any , hidden?: boolean }) {
     return (
-        <Link href={href}>
+        <Link href={href} hidden={hidden}>
             <li
                 className={`
         relative flex items-center p-3 my-2
         font-medium rounded-lg cursor-pointer
         transition-colors duration-200 group
         ${active
-                        ? "text-dodger-blue"
-                        : "hover:bg-dodger-blue/10"
+                        ? "text-foreground bg-[#E9E9E9] dark:bg-lavender-gray"
+                        : "hover:bg-dodger-blue/10 text-txt-secondary/90"
                     }
     `}
             >
@@ -34,22 +34,6 @@ function SidebarItem({ href, icon, text, active, alert, expanded }: { href: stri
                             }`}
                     />
                 )}
-
-                {/* Tooltip for collapsed state (Optional UX enhancement) */}
-                {!expanded && (
-                    <div
-                        className={`
-        absolute left-full rounded-md px-2 py-1 ml-6
-        bg-indigo-100 text-indigo-800 text-sm
-        invisible opacity-20 -translate-x-3 transition-all
-        group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
-        z-50 whitespace-nowrap shadow-md
-    `}
-                    >
-                        {text}
-                    </div>
-                )}
-
             </li>
         </Link>
     );

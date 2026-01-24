@@ -1,13 +1,15 @@
 "use client"
 
+import { CAR_COLORS_MAP } from "@/types/Driver"
+
 interface CarDetailsFormProps {
   formData: {
-    carBrand: string
-    carColor: string
-    carPlate: string
-    numSeats: string
+    Model: string
+    Color: string
+    Plate: string
+    NumOfSeats: string
   }
-  onInputChange: (field: "carBrand" | "carColor" | "carPlate" | "numSeats", value: string) => void
+  onInputChange: (field: "Model" | "Color" | "Plate" | "NumOfSeats", value: string) => void
 }
 
 export default function CarDetailsForm({ formData, onInputChange }: CarDetailsFormProps) {
@@ -17,30 +19,35 @@ export default function CarDetailsForm({ formData, onInputChange }: CarDetailsFo
         <input
           type="text"
           placeholder="Car Brand & Model"
-          value={formData.carBrand}
-          onChange={(e) => onInputChange("carBrand", e.target.value)}
-          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          value={formData.Model}
+          onChange={(e) => onInputChange("Model", e.target.value)}
+          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:bg-[#111827] dark:text-gray-100 dark:border-gray-600"
         />
-        <input
-          type="text"
-          placeholder="Car Color"
-          value={formData.carColor}
-          onChange={(e) => onInputChange("carColor", e.target.value)}
-          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-        />
+        <select
+          value={formData.Color}
+          onChange={(e) => onInputChange("Color", e.target.value)}
+          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-gray-400 dark:bg-[#111827] dark:text-gray-100 dark:border-gray-600"
+        >
+          <option value="">Select Car Color</option>
+          {Object.entries(CAR_COLORS_MAP).map(([key, label]) => (
+            <option key={key} value={key}>
+              {label}
+            </option>
+          ))}
+        </select>
         <input
           type="text"
           placeholder="Car Plate Number"
-          value={formData.carPlate}
-          onChange={(e) => onInputChange("carPlate", e.target.value)}
-          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          value={formData.Plate}
+          onChange={(e) => onInputChange("Plate", e.target.value)}
+          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:bg-[#111827] dark:text-gray-100 dark:border-gray-600"
         />
         <input
           type="text"
           placeholder="Number of Seats"
-          value={formData.numSeats}
-          onChange={(e) => onInputChange("numSeats", e.target.value)}
-          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          value={formData.NumOfSeats}
+          onChange={(e) => onInputChange("NumOfSeats", e.target.value)}
+          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:bg-[#111827] dark:text-gray-100 dark:border-gray-600"
         />
       </div>
     </div>

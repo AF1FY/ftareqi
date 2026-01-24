@@ -1,4 +1,5 @@
-import { Tokens } from "@/types/Auth";
+import { AuthResponse, Tokens } from "@/types/Auth";
+import { DriverStatus } from "./Moderator";
 
 // User entity for domain layer
 export interface LoginCredentials {
@@ -7,19 +8,25 @@ export interface LoginCredentials {
   rememberMe: boolean
 }
 
-export interface AuthResponse {
-  success: boolean
-  message: string
-  errors: string[]
-  data: any
+export enum Role{
+  Admin= 'Admin',
+  Moderator= 'Moderator',
+  User= 'User'
 }
 
-export interface LoginResponse extends AuthResponse{
-  data: Tokens | null
+export interface IUsersParams{
+  SortBy?: 'CreatedAt',
+  PhoneNumber?: string,
+  FullName?: string,
+  Page?: number,
+  PageSize?: number,
+  SortDescending?: boolean
 }
 
-export interface Role{
-  Admin: 'Admin'
-  Moderator: 'Moderator'
-  User: 'User'
+export interface IGetUsers{
+  id: string,
+  fullName: string,
+  phoneNumber: string,
+  createdAt: string,
+  driverStatus?: DriverStatus
 }

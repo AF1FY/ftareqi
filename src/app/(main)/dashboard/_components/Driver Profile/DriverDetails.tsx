@@ -1,18 +1,12 @@
 'use client'
 import type { DriverDetailsType } from '@/types/Moderator'
-import { DriverStatus } from '@/types/Moderator'
-import { DetailItem } from './DetailItem'
+import { DriverStatus, StatusStyles } from '@/types/Moderator'
+import { DetailItem } from '../DetailItem'
 import { formatDateTime } from '@/lib/utils'
 import { ZoomableImage } from './ZoomableImage'
 
-const statusStyles: Record<string, string> = {
-    [DriverStatus[0]]: 'bg-pending text-pending-t',
-    [DriverStatus[1]]: 'bg-approved text-approved-t',
-    [DriverStatus[2]]: 'bg-rejected text-rejected-t',
-}
-
 const DriverDetails = ({ driverDetails }: { driverDetails: DriverDetailsType }) => {
-    const currentStyle = statusStyles[driverDetails.driverStatus] || 'bg-gray-100 text-gray-600'
+    const currentStyle = StatusStyles[driverDetails.driverStatus] || 'bg-gray-100 text-gray-600'
     const { driverStatus } = driverDetails
 
     return (

@@ -2,7 +2,7 @@
 import type { CarDetailsType } from '@/types/Moderator'
 import type { DriverDetailsType } from '@/types/Moderator'
 import { DriverStatus } from '@/types/Moderator'
-import { DetailItem } from './DetailItem'
+import { DetailItem } from '../DetailItem'
 import { formatDateTime } from '@/lib/utils'
 import { ZoomableImage } from './ZoomableImage'
 import CarColorBadge from './CarColorBadge'

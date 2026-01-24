@@ -3,8 +3,6 @@ import { type NextRequest, NextResponse } from "next/server"
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
-
-    // استخراج البيانات
     const firstName = formData.get("firstName")?.toString() || "Unknown"
     const lastName = formData.get("lastName")?.toString() || "Unknown"
     const email = formData.get("email")?.toString() || "unknown@example.com"

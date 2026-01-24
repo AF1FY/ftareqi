@@ -1,5 +1,4 @@
 "use server"
-
 import { AuthResponse, Tokens } from '@/types/Auth';
 import { DriverProfileDetails, DriverRequestItem, GetDriversParams, PaginatedData } from '@/types/Moderator';
 import axios from 'axios';
