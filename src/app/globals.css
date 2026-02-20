@@ -1,7 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-
 @custom-variant dark (&:is(.dark *));
+
+@utility full-scn {
+  min-height: calc(100vh - 64px);
+}
 
 @theme inline {
   --color-background: var(--background);

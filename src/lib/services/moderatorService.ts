@@ -28,3 +28,11 @@ export const getCarColorHex = (colorName: string): string => {
     const normalizedName = colorName.toLowerCase().trim();
     return CAR_COLORS_MAP[normalizedName] || normalizedName;
 };
+function formatPendingImgUpload(status:string) : string {
+    return `${status.slice(0,7)} ${status.slice(7,12)} ${status.slice(12)}`;
+}
+export function formatDriverStatus(status?: DriverStatus) {
+    if(status === DriverStatus.PendingImageUpload)
+        return formatPendingImgUpload(status);
+    return status ?? 'Not a Driver';
+}

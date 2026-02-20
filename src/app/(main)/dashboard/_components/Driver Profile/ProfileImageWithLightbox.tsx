@@ -19,7 +19,7 @@ export const ProfileImageWithLightbox = ({
 }: ProfileImageWithLightboxProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-
+    
     const imageSrc = typeof src === 'string' ? src : src.src
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {

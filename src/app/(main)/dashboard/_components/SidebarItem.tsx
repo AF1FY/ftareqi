@@ -9,7 +9,7 @@ function SidebarItem({ href, icon, text, active, alert, expanded , hidden = fals
         font-medium rounded-lg cursor-pointer
         transition-colors duration-200 group
         ${active
-                        ? "text-foreground bg-[#E9E9E9] dark:bg-lavender-gray"
+                        ? "text-foreground bg-athens-gray"
                         : "hover:bg-dodger-blue/10 text-txt-secondary/90"
                     }
     `}

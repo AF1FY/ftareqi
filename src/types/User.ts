@@ -1,5 +1,6 @@
 import { AuthResponse, Tokens } from "@/types/Auth";
 import { DriverStatus } from "./Moderator";
+import { StaticImageData } from "next/image";
 
 // User entity for domain layer
 export interface LoginCredentials {
@@ -8,13 +9,18 @@ export interface LoginCredentials {
   rememberMe: boolean
 }
 
-export enum Role{
-  Admin= 'Admin',
-  Moderator= 'Moderator',
-  User= 'User'
+export enum Role {
+  Admin = 'Admin',
+  Moderator = 'Moderator',
+  User = 'User'
 }
 
-export interface IUsersParams{
+export enum IGender {
+  Male = 'Male',
+  Female = 'Female'
+}
+
+export interface IUsersParams {
   SortBy?: 'CreatedAt',
   PhoneNumber?: string,
   FullName?: string,
@@ -23,10 +29,18 @@ export interface IUsersParams{
   SortDescending?: boolean
 }
 
-export interface IGetUsers{
+export interface IGetUsers {
   id: string,
   fullName: string,
   phoneNumber: string,
   createdAt: string,
   driverStatus?: DriverStatus
+}
+
+export interface IUserDetails {
+  id: string,
+  fullName: string,
+  phoneNumber: string,
+  image?: string,
+  roles: Role[]
 }

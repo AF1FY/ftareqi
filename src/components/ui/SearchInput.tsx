@@ -60,10 +60,40 @@ export default function SearchInput() {
     }, 300);
 
     return (
-        <input
-            placeholder="Search by Phone Number..."
-            defaultValue={searchParams.get("PhoneNumber") ?? ""}
-            onChange={(e) => handleSearch(e.target.value)}
-        />
+        <div className="group relative w-full sm:w-72">
+
+            <div className="
+        relative flex items-center w-full h-12 rounded-lg 
+        bg-athens-gray
+        border border-lavender-gray
+        transition-all duration-300 ease-out
+        group-focus-within:ring-2 group-focus-within:ring-pale-sky
+        ">
+
+                <div className="
+        absolute left-3 flex items-center justify-center text-pale-sky pointer-events-none
+        transition-all duration-300 ease-in-out
+        group-focus-within:-translate-x-4 group-focus-within:opacity-0
+        ">
+                    <span className="material-symbols-outlined">search</span>
+                </div>
+
+                <input
+                    className="
+            w-full h-full bg-transparent
+            text-txt-secondary
+            placeholder:text-txt-secondary
+            text-sm font-normal leading-normal
+            rounded-lg
+            focus:outline-none
+            transition-all duration-300 ease-out
+            pl-10 group-focus-within:pl-4
+        "
+                    placeholder="Search by Phone Number..."
+                    defaultValue={searchParams.get("PhoneNumber")?.toString()}
+                    onChange={(e) => handleSearch(e.target.value)}
+                />
+            </div>
+        </div>
     );
 }

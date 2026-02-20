@@ -3,14 +3,13 @@ import React, { useEffect, useState } from 'react'
 import {
     Home,
     Users,
-    CarFront,
+    Wallet,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Sidebar from './dashboard/_components/Sidebar';
 import SidebarItem from './dashboard/_components/SidebarItem';
 import ModernCarIcon from '@/components/svg/ModernCarIcon';
-import { useSession } from 'next-auth/react';
 import { getUserRoles } from '@/lib/services/adminService';
 import { Role } from '@/types/User';
 const layout = ({
@@ -27,9 +26,7 @@ const layout = ({
             setIsAdmin(res.includes(Role.Admin));
             setIsModerator(res.includes(Role.Moderator));
         })
-
     }, [isAdmin])
-
     const toggleSidebar = () => {
         setExpanded((curr) => !curr);
     };
@@ -40,6 +37,7 @@ const layout = ({
                 <SidebarItem href='/home' icon={<Home size={20} />} text="Home" active={pathName.endsWith('/home')} />
                 <SidebarItem href='/dashboard/users' icon={<Users size={20} />} text="Users" active={pathName.endsWith('/users')} hidden={!isAdmin} />
                 <SidebarItem href='/dashboard/drivers' icon={<ModernCarIcon size={22} />} text="Driver profiles" active={pathName.endsWith('/drivers')} hidden={!isAdmin && !isModerator} />
+                <SidebarItem href='/wallet' icon={<Wallet size ={20} />} text = 'Wallet' active = {pathName.endsWith('/wallet')} />
             </Sidebar>
             <div className='flex-1 bg-white-athens-gray overflow-y-auto ps-18 md:ps-0'>
                 <Navbar />

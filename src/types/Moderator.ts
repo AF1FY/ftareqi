@@ -22,12 +22,14 @@ export enum DriverStatus {
     Pending = 'Pending',
     Active = 'Active',
     Rejected = 'Rejected',
+    PendingImageUpload = 'PendingImageUpload'
 }
 export const StatusStyles: Record<string, string> = {
     [DriverStatus.Pending]: 'bg-pending text-pending-t',
     [DriverStatus.Active]: 'bg-approved text-approved-t',
     [DriverStatus.Rejected]: 'bg-rejected text-rejected-t',
-    ['null']: 'bg-gray-100 text-gray-600'
+    [DriverStatus.PendingImageUpload] : 'bg-pending text-pending-t',
+    ['none']: 'bg-gray-100 text-gray-600'
 }
 export interface DriverDetailsType {
     fullName: string;

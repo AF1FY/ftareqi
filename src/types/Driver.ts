@@ -1,8 +1,11 @@
 export enum DriverStatus {
-  PENDING = "pending",
-  APPROVED = "approved",
-  REJECTED = "rejected",
-  SUSPENDED = "suspended",
+  PENDING = "Pending",
+  ACTIVE = "Active",
+  REJECTED = "Rejected",
+  SUSPENDED = "Suspended",
+  PendingImageUpload = 'Pending Image Upload',
+  ImageUploadFailed = 'Image Upload Failed',
+  EXPIRED = 'Expired'
 }
 
 export enum CarColor {
@@ -38,22 +41,25 @@ export const CAR_COLORS_MAP: Record<CarColor, string> = {
 };
 
 export interface DriverDetails {
-  DriverProfilePhoto?: File | null;
-  DriverLicenseFront: File;
-  DriverLicenseBack: File;
-  LicenseExpiryDate: string;
+  id: number,
+  licenseExpiryDate: string,
+  status: DriverStatus,
+  createdAt: string,
+  driverProfilePhoto: string,
+  driverLicenseFront: string,
+  driverLicenseBack: string
 }
 
 export interface CarDetails {
   Model: string;
   Color: string;
   Plate: string;
-  LicenseExpiryDate: string;          // ← موجود في Swagger للـ car
-  NumOfSeats: string;                 // ← غيرته string عشان يتطابق مع الـ input
+  LicenseExpiryDate: string;
+  NumOfSeats: string;
   CarPhoto: File;
   CarLicenseFront: File;
   CarLicenseBack: File;
-  CarLicenseExpiryDate?: string;      // ← اختياري لو عايزة تضيفيه لاحقًا
+  CarLicenseExpiryDate?: string;
 }
 
 export interface DriverProfile {

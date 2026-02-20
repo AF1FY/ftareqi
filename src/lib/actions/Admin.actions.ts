@@ -1,6 +1,6 @@
 'use server'
 
-import { IGetUsers, IUsersParams } from "@/types/User";
+import { IGetUsers, IUserDetails, IUsersParams, Role } from "@/types/User";
 import { getAuthTokens } from "../token";
 import axios from "axios";
 import { PaginatedData } from "@/types/Moderator";
@@ -13,16 +13,11 @@ export async function getUsersAsync(params: IUsersParams): Promise<AuthResponse<
     try {
         const token = await getAuthTokens();
 
-        // خطوة احترافية: تنظيف الباراميترز
-        // نقوم بإنشاء object جديد يحتوي فقط على القيم التي ليست فارغة ولا null ولا undefined
-        // هذا يمنع إرسال { PhoneNumber: '' } إلى الباك إند
         const cleanParams = Object.fromEntries(
             Object.entries(params).filter(([_, value]) => value !== '' && value != null)
         );
 
-        // التغيير هنا: استخدام get بدلاً من post
         const res = await axios.get<AuthResponse<PaginatedData<IGetUsers>>>(`${BASE_URL}/${BASE_ENDPOINT}`, {
-            // نستخدم cleanParams بدلاً من params المباشرة
             params: cleanParams,
             headers: {
                 Authorization: `Bearer ${token?.accessToken}`
@@ -31,12 +26,68 @@ export async function getUsersAsync(params: IUsersParams): Promise<AuthResponse<
 
         return res.data;
     } catch (e: any) {
-        console.error("API Error:", e); // مفيد للـ debugging
+        console.error("API Error:", e);
         return {
             success: false,
             message: e.response?.data?.message ?? 'Failed to fetch users.',
             errors: e.response?.data?.errors ?? ['Network error'],
             data: e.response?.data?.data
         };
+    }
+}
+export async function getUserDetailsAsync(id:string) : Promise<AuthResponse<IUserDetails>> {
+    try{
+        const token = await getAuthTokens();
+        return axios.get<AuthResponse<IUserDetails>>(`${BASE_URL}/${BASE_ENDPOINT}/${id}` , {
+            headers: {
+                Authorization: `Bearer ${token?.accessToken}`
+            }
+        }).then(res => res.data);
+    }catch(e:any){
+        console.error('Error from getUserDetails : ',e);
+        return{
+            success: false,
+            message: e.response?.data?.message ?? 'Failed to fetch user.',
+            errors: e.response?.data?.errors ?? ['Network error'],
+            data: e.response?.data?.data
+        }
+    }
+}
+//! Remove role
+export async function removeRoleAsync(id:string , role: Role) : Promise<AuthResponse<undefined>> {
+    try{
+        const token = await getAuthTokens();
+        return await axios.delete<AuthResponse<undefined>>(`${BASE_URL}/${BASE_ENDPOINT}/${id}/remove-role/${role.toLocaleLowerCase()}` , {
+            headers: {
+                Authorization: `Bearer ${token?.accessToken}`
+            }
+        }).then(res => res.data);
+    }catch(e:any){
+        console.error('Error from removeRoleAsync : ',e);
+        return{
+            success: false,
+            message: e.response?.data?.message ?? 'Failed to remove role from user.',
+            errors: e.response?.data?.errors ?? ['Network error'],
+            data: e.response?.data?.data
+        }
+    }
+}
+//* Add role
+export async function addRoleAsync(id:string , role: Role) : Promise<AuthResponse<undefined>> {
+    try{
+        const token = await getAuthTokens();
+        return await axios.post<AuthResponse<undefined>>(`${BASE_URL}/${BASE_ENDPOINT}/${id}/add-role/${role.toLocaleLowerCase()}` ,{}, {
+            headers: {
+                Authorization: `Bearer ${token?.accessToken}`
+            }
+        }).then(res => res.data);
+    }catch(e:any){
+        console.error('Error from removeRoleAsync : ',e);
+        return{
+            success: false,
+            message: e.response?.data?.message ?? 'Failed to add role to user.',
+            errors: e.response?.data?.errors ?? ['Network error'],
+            data: e.response?.data?.data
+        }
     }
 }

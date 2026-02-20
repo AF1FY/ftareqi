@@ -66,7 +66,7 @@ const Navbar = () => {
                         </>
                         }
                         <li>
-                            <Link href={'/dashboard'} className='hover:underline'> Dashboard </Link>
+                            <Link href={'/home'} className='hover:underline'> Home </Link>
                         </li>
                         <li>
                             <ModeToggle />
