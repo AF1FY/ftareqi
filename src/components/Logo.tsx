@@ -5,7 +5,7 @@ import logo_white from '@/assets/logo-1-white.png';
 import logo_black from '@/assets/logo-1-black.png';
 import { useTheme } from "next-themes";
 
-const Logo = () => {
+const Logo = ({className = 'w-full'}: {className?: string}) => {
     const { resolvedTheme } = useTheme();
     const [mounted, setMounted] = React.useState(false);
 
@@ -23,7 +23,7 @@ const Logo = () => {
             src={logo}
             alt="ftareqi logo"
             priority
-            className="w-full"
+            className= {className}
         />
     );
 };

@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import { Status } from "@/components/OTPVerification";
-import { VerifyOtpResponse } from "@/types/Auth";
+import { AuthResponse, VerifyOtpResponse } from "@/types/Auth";
 
 type ResendFn = (phone: string) => Promise<any>;
 type VerifyFn = (code: string, phone: string) => Promise<any>;
@@ -42,7 +42,7 @@ export default function useOTP({
         return res;
     };
 
-    const handleVerify = async (code: string): Promise<VerifyOtpResponse> => {
+    const handleVerify = async (code: string): Promise<AuthResponse<VerifyOtpResponse>> => {
         console.log("Handle verify from use otp is invoked");
         setStatus({ message: 'Verifying code...', type: 'loading' });
         const res = await verifyFn(code, phone);

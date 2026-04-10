@@ -166,8 +166,8 @@ export default function DriverRegistrationForm() {
   }
 
   return (
-    <div className="bg-white dark:bg-[#1f2937] rounded-3xl shadow-lg p-8 transition-colors">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-8 text-center">Driver Registration</h1>
+    <div className="bg-popover rounded-3xl shadow-lg p-8 transition-colors">
+      <h1 className="text-2xl font-bold mb-12 text-center">Driver Registration</h1>
 
       {error && <div className="mb-4 p-3 bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-200 text-xs rounded-lg">{error}</div>}
 

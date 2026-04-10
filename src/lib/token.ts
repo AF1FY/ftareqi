@@ -8,5 +8,5 @@ export async function getAuthTokens(): Promise<Tokens | null> {
     const session = await getServerSession(authOptions);
     if(session?.isRefreshTokenExpired || !session?.accessToken)
         return null;
-    return {accessToken: session?.accessToken , refreshToken: session?.refreshToken , userId: session?.userId , roles: session?.role};
+    return {accessToken: session?.accessToken , refreshToken: session?.refreshToken , userId: session?.userId , roles: session?.role , IsDriver: session.IsDriver === 'True'};
 }

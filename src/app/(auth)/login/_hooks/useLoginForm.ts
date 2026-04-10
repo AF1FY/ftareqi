@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useContext, useState } from "react"
 import type { LoginCredentials, AuthResponse, Tokens } from "@/types/Auth"
 import { formatPhoneNumber, LoginSchemaType } from "@/lib/validators/auth.schema"
@@ -21,7 +20,6 @@ export function useLoginForm() {
   const [response] = useState<AuthResponse<Tokens> | null>(null)
   const { updatePhoneNumber, role } = useContext(userContext);
   const router = useRouter();
-
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
@@ -55,6 +53,7 @@ export function useLoginForm() {
       console.log(credentials);
       const res = await loginUser(credentials);
       if (res.success) {
+        //* FCM Registration
         sessionStorage.setItem('login-toast', 'true');
         const tokens = { 
           accessToken: res.data?.accessToken,

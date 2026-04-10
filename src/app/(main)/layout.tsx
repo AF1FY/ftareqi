@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import {
+    Bell,
     Home,
     Users,
     Wallet,
@@ -38,6 +39,7 @@ const layout = ({
                 <SidebarItem href='/dashboard/users' icon={<Users size={20} />} text="Users" active={pathName.endsWith('/users')} hidden={!isAdmin} />
                 <SidebarItem href='/dashboard/drivers' icon={<ModernCarIcon size={22} />} text="Driver profiles" active={pathName.endsWith('/drivers')} hidden={!isAdmin && !isModerator} />
                 <SidebarItem href='/wallet' icon={<Wallet size ={20} />} text = 'Wallet' active = {pathName.endsWith('/wallet')} />
+                <SidebarItem href='/notification' icon={<Bell size ={20} />} text = 'Notifications' active = {pathName.endsWith('/notification')} />
             </Sidebar>
             <div className='flex-1 bg-white-athens-gray overflow-y-auto ps-18 md:ps-0'>
                 <Navbar />

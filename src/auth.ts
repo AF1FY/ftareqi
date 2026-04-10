@@ -47,10 +47,13 @@ export const authOptions: NextAuthOptions = {
             authorize: async (tokens) => {
                 console.log("-------------📢 NEXTAUTH AUTHORIZE STARTED\n\n\n\n");
                 const { accessToken, refreshToken } = tokens as Tokens;
-                const { exp, sub , role }: { exp: number, sub: string , role: string } = jwtDecode(accessToken);
+                const { exp, sub , role , IsDriver }: { exp: number, sub: string , role: string , IsDriver: boolean } = jwtDecode(accessToken);
+                console.log('---------------- From JWT Decode --------------------');
+                console.log("Is driver : ", IsDriver );
                 return {
                     id: sub,
                     role,
+                    IsDriver,
                     accessToken,
                     refreshToken,
                     expiresIn: exp * 1000,
@@ -66,11 +69,11 @@ export const authOptions: NextAuthOptions = {
             if (user) {
                 token.userId = user.id
                 token.role = user.role
+                token.IsDriver = user.IsDriver
                 token.accessToken = user.accessToken
                 token.refreshToken = user.refreshToken
                 token.expiresIn = user.expiresIn
                 token.isRefreshTokenExpired = user.isRefreshTokenExpired
-                console.log("--------------⭐ Token ⭐---------------\n", token);
             }
             console.log('Date.now() < token?.expiresIn : ', Date.now() < token?.expiresIn);
             console.log('Date.now() : ', Date.now());
@@ -85,6 +88,7 @@ export const authOptions: NextAuthOptions = {
             if (token) {
                 session.userId = token.userId;
                 session.role = token.role;
+                session.IsDriver = token.IsDriver;
                 session.isRefreshTokenExpired = token.isRefreshTokenExpired;
                 session.refreshToken = token.refreshToken
                 session.accessToken = token.accessToken;

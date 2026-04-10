@@ -10,8 +10,7 @@ const Loginlayout = ({
 }>) => {
 
     return (
-        <div className="flex w-screen h-screen bg-[#F6F7F8] dark:bg-[#0E131B] transition-colors">
-
+        <div className="flex h-[calc(100vh-64px)] bg-[#F6F7F8] dark:bg-[#0E131B] transition-colors">
             {/* Left side - Image */}
             <div className="hidden lg:block relative w-1/2 h-full">
 

@@ -7,10 +7,10 @@ export const metadata = {
 
 export default function DriverRegistrationPage() {
   return (
-    <main className="min-h-screen pt-[100px] flex items-center justify-center bg-[#fbfcff] dark:bg-[#0E131B] transition-colors">
-      <div className="w-full max-w-2xl">
+    <div className="full-scn flex items-center justify-center transition-colors">
+      <div className="w-full max-w-4xl">
         <DriverRegistrationForm />
       </div>
-    </main>
+    </div>
   )
 }

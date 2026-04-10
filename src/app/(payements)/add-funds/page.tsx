@@ -1,12 +1,12 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Lock, CreditCard, Smartphone, Wallet, CircleCheck} from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import map_view from '@/assets/map.png';
 import styles from './AddFunds.module.css';
 import { ITopUpRequest, PaymentMethod } from '@/types/Wallet';
-import { addFundsAsync } from '@/lib/actions/Wallet.actions';
+import { addFundsAsync, getWalletAsync } from '@/lib/actions/Wallet.actions';
 import { toast } from 'sonner';
 
 export default function AddFunds() {
@@ -16,16 +16,26 @@ export default function AddFunds() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [walletNumberError, setWalletNumberError] = useState('');
+    const [crntBalance, setCrntBalance] = useState(0);
     // Constants
     const MIN_AMOUNT = 100;
     const MAX_AMOUNT = 1000;
-    const CURRENT_BALANCE = 45.50;
 
     const isAmountValid = (val: number): boolean => val <= MAX_AMOUNT && val >= MIN_AMOUNT
     const isWalletNumberValid = (number: string) => {
         const regex = /^(0?1[0125])[0-9]{8}$/;
         return regex.test(number);
     };
+
+    async function getCurrentBalance() {
+        const res = await getWalletAsync();
+        setCrntBalance(res.data?.balance ?? 0);
+    }
+
+    useEffect(() => {
+        getCurrentBalance
+    }, [])
+    
     // Handlers
     const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = parseFloat(e.target.value);
@@ -308,7 +318,7 @@ export default function AddFunds() {
                         </div>
                     </div>
                     <div className="text-2xl font-extrabold">
-                        {CURRENT_BALANCE.toFixed(2)} <span className="text-sm font-medium text-txt-secondary">EGP</span>
+                        {crntBalance.toFixed(2)} <span className="text-sm font-medium text-txt-secondary">EGP</span>
                     </div>
 
                     <div className="mt-4 pt-4 border-t border-athens-gray">
@@ -319,7 +329,7 @@ export default function AddFunds() {
                         <div className="mt-1 flex justify-between items-center">
                             <span className="text-xs font-semibold">New Balance</span>
                             <span className="text-sm font-bold text-green-600 dark:text-green-400">
-                                {(CURRENT_BALANCE + (isAmountValid(amount) ? amount : 0)).toFixed(2)} EGP
+                                {(crntBalance + (isAmountValid(amount) ? amount : 0)).toFixed(2)} EGP
                             </span>
                         </div>
                     </div>

@@ -1,0 +1,9 @@
+.borderTop80::after{
+    position: absolute;
+    content: '';
+    width: 80%;
+    left: 10%;
+    height: 1px;
+    top: 0px;
+    background-color: var(--color-athens-gray);
+}

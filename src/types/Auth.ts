@@ -15,6 +15,7 @@ export interface Tokens {
   roles?: Role[]
   accessToken: string,
   refreshToken: string,
+  IsDriver: boolean,
 }
 export interface VerifyOtpResponse{
   remainingAttempts?: Number,

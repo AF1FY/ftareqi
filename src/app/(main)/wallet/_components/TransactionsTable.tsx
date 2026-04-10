@@ -10,6 +10,7 @@ import styles from '../Wallet.module.css'
 
 import ErrorState from '@/components/ErrorState';
 import Link from 'next/link';
+import Pagination from '@/components/ui/Pagination';
 // --- Component: Empty State ---
 const EmptyState = () => (
     <tr>
@@ -36,10 +37,14 @@ const EmptyState = () => (
 export default function TransactionsTable() {
     const { data: res, isLoading, isError, error, refetch } = useQuery({
         queryKey: ['transactions'],
-        queryFn: async () => await getTransactionsAsync()
+        queryFn: async () => {
+            const res = await getTransactionsAsync();
+            if (!res.success)
+                throw new Error(res?.message || res?.errors[0] || 'Failed to fetch transactions');
+            return res.data;
+        }
     })
-    if (!res?.success)
-        console.log('Response failure : ', res);
+    console.log('Transaction Response : ', res);
     return (
         <>
             {/* Header */}
@@ -64,8 +69,8 @@ export default function TransactionsTable() {
                             <ErrorState error={error} refetch={refetch} />
                         ) : (
                             <tbody className="divide-y divide-athens-gray">
-                                {res?.data?.transactions.length ?? 0 > 0 ? (
-                                    res?.data?.transactions.map((transaction) => (
+                                {res?.items.length ?? 0 > 0 ? (
+                                    res?.items.map((transaction) => (
                                         <TransactionRow key={transaction.id} transaction={transaction} />
                                     ))
                                 ) : (
@@ -77,12 +82,21 @@ export default function TransactionsTable() {
                 </div>
             </section>
             {/* Pagination Section */}
-            {/* <div className="flex items-center justify-between mt-6">
+            <div className="flex items-center justify-between mt-6">
                 <p className="text-sm text-pale-sky ps-1">
-                    Showing <span className="text-foreground font-medium">{(page - 1) * 10 + 1}</span> to <span className="text-foreground font-medium">{Math.min(page * 10, res.data?.totalCount ?? 0)}</span> of <span className="text-foreground font-medium">{res.data?.totalCount ?? 0}</span> results
+                    Showing <span className="text-foreground me-0.5 font-medium">
+                        {(res?.page ? (res.page - 1) * 10 + 1 : 0)}
+                    </span>
+                    to <span className="text-foreground me-0.5 font-medium">
+                        {Math.min(res?.page ? res.page * 10 : 0, res?.totalCount ?? 0)}
+                    </span>
+                    of <span className="text-foreground me-0.5 font-medium">
+                        {res?.totalCount ?? 0}
+                    </span> results
                 </p>
-                <Pagination totalPages={res.data?.totalPages ?? 0} />
-            </div> */}
+                <Pagination totalPages={res?.totalPages ?? 0} />
+            </div>
+
         </>
     );
 }

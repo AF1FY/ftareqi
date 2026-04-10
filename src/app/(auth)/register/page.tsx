@@ -56,7 +56,7 @@ const Register = () => {
         updatePhoneNumber(user.phoneNumber);
         sessionStorage.setItem('phone-number',user.phoneNumber);
         updateRole(user.role);
-        router.push('/register/verify');
+        router.push('/verify');
       }
       else {
         if (res.errors.length !== 0) {

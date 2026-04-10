@@ -4,10 +4,8 @@ import { userContext } from '@/context/userContext';
 import { resendOTP, verifyUserRegistration } from '@/lib/actions/Auth.actions';
 import { toast } from 'sonner';
 import { useContext, useEffect, useState } from 'react';
-import useOTP from '../../_hooks/useOTP';
-import { Tokens } from '@/types/Auth';
-import { refresh } from 'next/cache';
 import { signIn } from 'next-auth/react';
+import useOTP from '../_hooks/useOTP';
 
 
 const page = () => {
@@ -45,6 +43,7 @@ const page = () => {
       toast(res.message, { duration: 4000, position: 'top-right' });
       setStatus({ message: res.message, type: 'success' });
       sessionStorage.removeItem('phone-number');
+      sessionStorage.setItem('registered-toast','1')
       window.location.href = (role === 2) ? '/driver-registration' : '/';
     } else if (!res?.data) {
       await handleResend();

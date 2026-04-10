@@ -6,7 +6,7 @@ const RegisterLayout = ({
   children,
 }: Readonly<{ children: React.ReactNode }>) => {
   return (
-    <div className="bg-[#fbfcff] dark:bg-background min-h-screen md:pt-20 flex items-center">
+    <div className="bg-[#fbfcff] dark:bg-background full-scn md:pt-20 flex items-center">
       <div className="container flex flex-col md:flex-row items-center">
         <picture className="md:w-1/2 order-2 md:order-1 hidden lg:block">
             <Image className="m-auto" src={signup_image} alt="carpooling" />

@@ -6,6 +6,7 @@ declare module "next-auth" {
     interface User {
         id: string;
         role: Role[];
+        IsDriver: boolean;
         accessToken: string;
         refreshToken: string;
         expiresIn: number;
@@ -15,6 +16,7 @@ declare module "next-auth" {
     export interface Session {
         userId: User.userId;
         role: User.role;
+        IsDriver: User.IsDriver;
         isRefreshTokenExpired: User.isRefreshTokenExpired;
         accessToken: User.accessToken;
         refreshToken: User.refreshToken;

@@ -12,12 +12,12 @@ const Wallet = async () => {
         return `${getDateFormatted(date)} ${getHourFormatted(date)}`
     }
     const res = await getWalletAsync();
-    if(!res.success)
+    if (!res.success)
         console.log('Response Failure : ', res);
     const wallet: IWallet | undefined = res.data;
 
     return (
-        <div className='md:full-scn container p-8'>
+        <div className='md:full-scn max-w-6xl mx-auto p-8'>
             {/* //? Balance Card */}
             <section className="relative mb-10 overflow-hidden rounded-xl bg-linear-to-br from-blue-700 via-royale-blue to-blue-500 dark:from-blue-900 dark:via-royale-blue dark:to-blue-800 text-white shadow-lg shadow-blue-500/20">
                 <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white/10 blur-3xl"></div>
@@ -30,7 +30,7 @@ const Wallet = async () => {
                             Current Balance
                         </p>
                         <div className="flex items-baseline gap-2">
-                            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">{wallet?.balance.toFixed(2) ?? 'N/A'}</h2>
+                            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">{wallet?.balance.toFixed(2) ?? '0.0'}</h2>
                             <span className="text-xl md:text-2xl font-medium text-gray-200">EGP</span>
                         </div>
                         {/* //? Locked balance show it only if there are */}
@@ -38,7 +38,9 @@ const Wallet = async () => {
                             <i className='fa-solid fa-lock' />
                             <p>Locked Balance: {wallet?.lockedBalance.toFixed(2)} <span className="text-gray-200">EGP</span></p>
                         </div>)}
-                        <p className="text-sm ps-1.5">Last updated: <span className="text-gray-200">{handleUpdatedDate(wallet?.updatedAt) ?? 'N/A'}</span></p>
+                        {wallet?.updatedAt && (
+                            <p className="text-sm ps-1.5">Last updated: <span className="text-gray-200">{handleUpdatedDate(wallet.updatedAt) ?? 'N/A'}</span></p>
+                        )}
                     </div>
                     <div className="flex gap-4">
                         <Link

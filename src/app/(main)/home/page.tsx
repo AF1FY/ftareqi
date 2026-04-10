@@ -32,20 +32,20 @@ const recentRides: IRecentRideCard[] = [
     }
 ];
 const Home = () => {
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                console.log(position.coords.latitude);
-                console.log(position.coords.longitude);
-            },
-            (error) => {
-                console.error(error);
-            }
-        );
-    }, [])
+    // useEffect(() => {
+    //     navigator.geolocation.getCurrentPosition(
+    //         (position) => {
+    //             console.log(position.coords.latitude);
+    //             console.log(position.coords.longitude);
+    //         },
+    //         (error) => {
+    //             console.error(error);
+    //         }
+    //     );
+    // }, [])
 
     return (
-        <div className="bg-porcelain p-8 grid grid-cols-3 gap-x-8 min-h-screen">
+        <div className="p-8 grid grid-cols-3 gap-x-8 min-h-screen">
             {/* //? Left side Quick Actions & Recent Rides */}
             <div className="col-span-2 gap-y-10 flex flex-col">
                 {/*//? Quick Actions  */}
