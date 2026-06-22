@@ -5,14 +5,15 @@ import axios from "axios";
 import { PaginatedData } from "@/types/Moderator";
 const BASE_URL = process.env.BASE_URL;
 
-export async function getDataAsync<T>(API_URL: string , id: string = '', message?: string, errors?: string[]): Promise<AuthResponse<T>> {
+export async function getDataAsync<T,X>(API_URL: string , id: string = '', message?: string, errors?: string[] , params?: X): Promise<AuthResponse<T>> {
     try{
         const tokens = await getAuthTokens();
         const url = `${BASE_URL}/${API_URL}/${id}`
         const res = await axios.get<Promise<AuthResponse<T>>>(url, {
             headers: {
                 Authorization: `Bearer ${tokens?.accessToken}`
-            }
+            },
+            params
         })
         return res.data;
     }catch(e: any){
@@ -25,14 +26,15 @@ export async function getDataAsync<T>(API_URL: string , id: string = '', message
     }
 }
 
-export async function getPaginatedDataAsync<T>(API_URL: string , id: string = '', message?: string, errors?: string[]): Promise<AuthResponse<PaginatedData<T>>> {
+export async function getPaginatedDataAsync<T,X>(API_URL: string , id: string = '', message?: string, errors?: string[], params?: X): Promise<AuthResponse<PaginatedData<T>>> {
     try{
         const tokens = await getAuthTokens();
         const url = `${BASE_URL}/${API_URL}/${id}`
         const res = await axios.get<Promise<AuthResponse<PaginatedData<T>>>>(url, {
             headers: {
                 Authorization: `Bearer ${tokens?.accessToken}`
-            }
+            },
+            params
         })
         return res.data;
     }catch(e: any){
@@ -64,13 +66,14 @@ export async function deleteByIDAsync<T>(API_URL: string , id: string | number, 
     }
 }
 
-export async function postDataAsync<T,X>(API_URL: string ,body: X, message?: string, errors?: string[]): Promise<AuthResponse<T>> {
+export async function postDataAsync<T,X>(API_URL: string ,body?: X, message?: string, params?: X, errors?: string[]): Promise<AuthResponse<T>> {
     try{
         const tokens = await getAuthTokens();
         const res = await axios.post<Promise<AuthResponse<T>>>(`${BASE_URL}/${API_URL}`, body, {
             headers: {
-                Authorization: `Bearer ${tokens?.accessToken}`
-            }
+                Authorization: `Bearer ${tokens?.accessToken}`,
+            },
+            params
         })
         return res.data;
     }catch(e: any){

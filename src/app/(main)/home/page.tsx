@@ -2,7 +2,6 @@
 import ModernCarIcon from '@/components/svg/ModernCarIcon';
 import { IRecentRideCard, RideStatus } from '@/types/Ride';
 import Link from 'next/link';
-import React, { useEffect } from 'react'
 import RecentRideCard from './_components/RecentRideCard';
 
 const recentRides: IRecentRideCard[] = [
@@ -11,7 +10,7 @@ const recentRides: IRecentRideCard[] = [
         rideDate: '2026-10-24 08:30 AM',
         rideSrc: 'ميدان التحرير، القاهرة',
         rideDest: 'مول العرب، 6 أكتوبر',
-        rideStatus: RideStatus[0] ,
+        rideStatus: RideStatus.Completed ,
         rideAmount: '120.50'
     },
     {
@@ -19,7 +18,7 @@ const recentRides: IRecentRideCard[] = [
         rideDate: '2026-10-23 05:15 PM',
         rideSrc: 'مدينة نصر',
         rideDest: 'التجمع الخامس',
-        rideStatus: RideStatus[0] ,
+        rideStatus: RideStatus.Completed ,
         rideAmount: '60.00'
     },
     {
@@ -27,22 +26,11 @@ const recentRides: IRecentRideCard[] = [
         rideDate: '2023-10-22 09:00 PM',
         rideSrc: 'المعادي',
         rideDest: 'الزمالك',
-        rideStatus: RideStatus[1] ,
+        rideStatus: RideStatus.InProgress ,
         rideAmount: '45.00'
     }
 ];
 const Home = () => {
-    // useEffect(() => {
-    //     navigator.geolocation.getCurrentPosition(
-    //         (position) => {
-    //             console.log(position.coords.latitude);
-    //             console.log(position.coords.longitude);
-    //         },
-    //         (error) => {
-    //             console.error(error);
-    //         }
-    //     );
-    // }, [])
 
     return (
         <div className="p-8 grid grid-cols-3 gap-x-8 min-h-screen">
@@ -54,14 +42,14 @@ const Home = () => {
                     {/*//? Actions  */}
                     <div className="grid grid-cols-2 gap-6">
                         {/* //? Offer Ride */}
-                        <Link href={'#'} className='rounded-3xl py-5 bg-foreground text-background flex items-center justify-center'>
+                        <Link href={'/ride/create'} className='rounded-3xl py-5 bg-foreground text-background flex items-center justify-center'>
                             <div className="flex flex-col gap-1.5 justify-center items-center">
                                 <ModernCarIcon size={20} />
                                 <strong>Offer Ride</strong>
                             </div>
                         </Link>
                         {/* //? Find Ride */}
-                        <Link href={'#'} className='bg-background hover:shadow-sm duration-200 transition-all rounded-3xl py-5 flex items-center justify-center'>
+                        <Link href={'/ride/search'} className='bg-background hover:shadow-sm duration-200 transition-all rounded-3xl py-5 flex items-center justify-center'>
                             <div className="flex flex-col gap-1.5 justify-center items-center">
                                 <i className="fa-solid fa-magnifying-glass-location text-xl" />
                                 <strong>Find Ride</strong>

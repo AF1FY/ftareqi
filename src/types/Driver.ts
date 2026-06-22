@@ -1,3 +1,5 @@
+import { CarDetailsType } from "./Moderator";
+
 export enum DriverStatus {
   PENDING = "Pending",
   ACTIVE = "Active",
@@ -50,16 +52,10 @@ export interface DriverDetails {
   driverLicenseBack: string
 }
 
-export interface CarDetails {
-  Model: string;
-  Color: string;
-  Plate: string;
-  LicenseExpiryDate: string;
-  NumOfSeats: string;
-  CarPhoto: File;
-  CarLicenseFront: File;
-  CarLicenseBack: File;
-  CarLicenseExpiryDate?: string;
+export interface CarDetails extends CarDetailsType {
+  id: number;
+  licenseExpiryDate: string;
+  carLicenseExpiryDate?: string;
 }
 
 export interface DriverProfile {

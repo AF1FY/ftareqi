@@ -1,4 +1,4 @@
-import { AuthResponse, Tokens } from "@/types/Auth";
+import { AuthResponse, PaginatedReq, Tokens } from "@/types/Auth";
 import { DriverStatus } from "./Moderator";
 import { StaticImageData } from "next/image";
 
@@ -20,13 +20,10 @@ export enum IGender {
   Female = 'Female'
 }
 
-export interface IUsersParams {
+export interface IUsersParams extends PaginatedReq {
   SortBy?: 'CreatedAt',
   PhoneNumber?: string,
   FullName?: string,
-  Page?: number,
-  PageSize?: number,
-  SortDescending?: boolean
 }
 
 export interface IGetUsers {

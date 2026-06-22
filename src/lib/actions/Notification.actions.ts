@@ -34,8 +34,8 @@ export async function getNotificationsAsync(Page?: number, PageSize?: number, So
         }
     }
 }
-export const getNotificationByIdAsync = async (id: number) => getDataAsync<AppNotification<string>>(API_URL, `${id}`, 'Failed to get notification');
-export const getUnReadAsync = async () => getDataAsync<{count: number}>(`${API_URL}/unread-count`);
+export const getNotificationByIdAsync = async (id: number) => getDataAsync<AppNotification<string>, undefined>(API_URL, `${id}`, 'Failed to get notification');
+export const getUnReadAsync = async () => getDataAsync<{count: number},undefined>(`${API_URL}/unread-count`);
 //^ PUT
 export async function markAsRead(all: boolean, id?: number): Promise<AuthResponse<undefined>> {
     try {

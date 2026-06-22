@@ -6,13 +6,19 @@ export enum NotificationCategory {
     Wallet = "Wallet",
     DriverRegistration = "DriverRegistration",
     System = "System",
+    Review = 'Review',
 }
 
 
 export enum NotificationEventCode {
+    //* Ride
     bookingRequest = 'bookingRequest',
     bookingAccepted = 'bookingAccepted',
     bookingDeclined = 'bookingDeclined',
+    bookingCanceled = 'bookingCanceled',
+    DriveCheckedIn = 'DriveCheckedIn',
+    RideStarted = 'RideStarted',
+    RideCancelled = 'RideCancelled',
     //* Wallet
     WalletCharged = 'WalletCharged',
     WalletWithdrawn = 'WalletWithdrawn',
@@ -22,7 +28,10 @@ export enum NotificationEventCode {
     //* DriverRegistration
     Approved = 'Approved',
     Rejected = 'Rejected',
-    Expired = 'Expired'
+    Expired = 'Expired',
+
+    //* Review
+    ReviewAdded = 'ReviewAdded',
 }
 
 //* 2. Metadata Interfaces (The parsed version of the "data" string)

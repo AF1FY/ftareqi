@@ -31,12 +31,13 @@ const AsideUser = ({ expanded }: { expanded: boolean }) => {
         keepPreviousData: true
     })
     const user = res?.data;
+    // console.log('User : ',user);
     if (isError)
         console.log('Error in loading user profile : ', error);
     return (
         <>
             {isLoading ? (<LoadingState expanded={expanded} />) : (
-                <div className={`p-3 pt-4 flex items-center relative ${styles.borderTop80}`}>
+                <div className={`p-0 py-4 flex items-center justify-center relative ${styles.borderTop80}`}>
                     <Link href='/profile'>
                         {user?.userImage ? (
                             <Image
@@ -53,11 +54,11 @@ const AsideUser = ({ expanded }: { expanded: boolean }) => {
                         </>)}
                     </Link>
                     <div
-                        className={`flex flex-col ml-3 overflow-hidden transition-all duration-300 ${expanded ? "w-40 opacity-100" : "w-0 opacity-0"
+                        className={`flex flex-col overflow-hidden transition-all duration-300 ${expanded ? "w-40 opacity-100 ml-3" : "w-0 opacity-0"
                             }`}
                     >
-                        <span className="font-semibold text-xs text-pale-sky whitespace-nowrap">{user?.isDriver ? 'Driver' : 'Passenger'}</span>
                         <span className="text-sm whitespace-nowrap">{user?.fullName}</span>
+                        <span className="font-semibold text-xs text-pale-sky whitespace-nowrap">{user?.isDriver ? 'Driver' : 'Passenger'}</span>
                     </div>
                 </div>
             )}

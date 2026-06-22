@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { ChevronDown, Loader2, Bell } from "lucide-react"; // ضفنا أيقونة Bell للـ Empty State
-import { categoryComponents, getNotificationTextColor, getNotifIconArrow, getNotifPreview, groupNotificationsByDate, useGetInfiniteNotifications, useGetUnreadCount, useMarkAllAsRead, useMarkAsRead } from "@/app/(main)/notification/hooks/useNotifications";
+import { ChevronDown, Loader2, Bell } from "lucide-react";
+import { categoryComponents, getNotificationTextColor, getNotifIconArrow, getNotifPreview, groupNotificationsByDate, useGetInfiniteNotifications, useGetUnreadCount, useMarkAllAsRead, useMarkAsRead } from "@/app/(main)/notification/_hooks/useNotifications";
 import { AllNotificationMetadata, AppNotification } from "@/types/Notifications";
 import { getDateFormatted, getHourFormatted } from "@/lib/services/walletService";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,7 @@ export default function NotificationsPage() {
     hasNextPage,
     isFetchingNextPage
   } = useGetInfiniteNotifications();
-  
+
   const { mutate: markAllAsRead } = useMarkAllAsRead();
   const { data: unreadCount = 0 } = useGetUnreadCount();
   const { mutate: markAsRead } = useMarkAsRead();
@@ -38,7 +38,7 @@ export default function NotificationsPage() {
   const renderUpdateCard = (notif: AppNotification<AllNotificationMetadata>) => {
     const iconTextColor = getNotificationTextColor(notif.eventCode);
     return (
-      <div 
+      <div
         key={notif.id}
         onClick={() => handleNotificationClick(notif)}
         className="group relative flex gap-4 p-3 rounded-2xl bg-background border border-transparent shadow-[0px_10px_30px_rgba(11,28,48,0.03)] hover:border-athens-gray transition-all cursor-pointer"
@@ -84,27 +84,23 @@ export default function NotificationsPage() {
       <div className="flex justify-between items-end mb-8">
         <div>
           <h1 className="font-headline text-4xl font-bold tracking-tight text-on-surface">Notifications</h1>
-          <p className="text-on-surface-variant mt-1">Stay updated with latest activities</p>
+          <p className="text-on-surface-variant mt-1 ms-1">Stay updated with latest activities</p>
         </div>
         <Button
           variant='ghost'
           onClick={() => markAllAsRead()}
-          // منعنا الزرار لو مفيش إشعارات أصلاً أو لو مفيش حاجة غير مقروءة
           disabled={unreadCount === 0 || allNotificationsRaw.length === 0}
           className="text-sm font-bold underline decoration-2 underline-offset-4 text-dodger-blue hover:text-dodger-blue/80 transition-opacity"
         >
           Mark all read
         </Button>
       </div>
-
       <div className="space-y-2">
         {isLoadingNotifications ? (
-          // حالة التحميل
           <div className="py-20 flex justify-center text-pale-sky">
             <Loader2 className="animate-spin size-8" />
           </div>
         ) : allNotificationsRaw.length === 0 ? (
-          // حالة الـ Empty State
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <div className="size-20 rounded-full bg-athens-gray/60 flex items-center justify-center mb-6">
               <Bell className="size-10" />
@@ -115,10 +111,8 @@ export default function NotificationsPage() {
             </p>
           </div>
         ) : (
-          // حالة وجود بيانات
           <>
             {renderGroupedList(groupedUpdates, renderUpdateCard)}
-
             {/* Load More Button */}
             {hasNextPage && (
               <div className="flex justify-center pt-4">

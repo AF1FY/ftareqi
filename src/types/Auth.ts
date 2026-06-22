@@ -17,9 +17,14 @@ export interface Tokens {
   refreshToken: string,
   IsDriver: boolean,
 }
-export interface VerifyOtpResponse{
+export interface VerifyOtpResponse {
   remainingAttempts?: Number,
   resetToken?: string,
   accessToken?: string,
   refreshToken?: string,
+}
+export interface PaginatedReq {
+  Page?: number;
+  PageSize?: number;
+  SortDescending?: boolean;
 }

@@ -1,11 +1,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { IRecentRideCard, RideStatusStyle } from '@/types/Ride'
+import { IRecentRideCard, RideStatus } from '@/types/Ride'
 import { PoundSterling } from 'lucide-react';
 import NULL_PROFILE_PICTURE from '@/assets/generic_profile_picture.png';
+import { getRideStatusStyle } from '@/lib/services/rideService';
 
 const RecentRideCard = ({ data }: { data: IRecentRideCard }) => {
-    const rideStyle = RideStatusStyle[data.rideStatus] || 'bg-gray-100 text-gray-600';
+    const rideStyle = getRideStatusStyle(data.rideStatus);
     return (
         <Link href={'#'} className='grid grid-cols-5 items-center gap-4 bg-background rounded-xl px-4 py-2'>
             {/* //? Driver Info */}

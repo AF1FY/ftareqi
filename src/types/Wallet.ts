@@ -5,8 +5,11 @@ export enum TransactionType {
     Withdrawal = 'Withdrawal',
     RidePayment = 'Ride Payment',
     Earnings = 'Earnings',
-    Refund = 'Refund'
+    Refund = 'Refund',
+    locked = 'locked',
+    Released = 'Released'
 }
+
 export type PaymentMethod = 'wallet' | 'card'
 
 export interface ITransaction {
@@ -34,11 +37,11 @@ export interface ITransactions {
     transactions: ITransaction[]
 }
 
-export interface ITopUpRequest{
+export interface ITopUpRequest {
     walletNumber?: string,
     amount: number
 }
 
-export interface ITopUpResponse{
+export interface ITopUpResponse {
     paymentUrl: string
 }

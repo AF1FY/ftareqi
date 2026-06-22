@@ -7,6 +7,7 @@ interface IconProps {
     color?: string;
     className?: string;
     style?: React.CSSProperties;
+    isActive?: boolean;
 }
 
 const ModernCarIcon: React.FC<IconProps> = ({
@@ -14,8 +15,8 @@ const ModernCarIcon: React.FC<IconProps> = ({
     color = "currentColor",
     className = "",
     style,
+    isActive = false
 }) => {
-    const { resolvedTheme } = useTheme();
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -43,7 +44,7 @@ const ModernCarIcon: React.FC<IconProps> = ({
                     </g>
                     <g transform="scale(2.4049)">
                         <path
-                            fill={resolvedTheme === 'dark' ? 'black' : 'white'} opacity="0.9"
+                            opacity="0.9" fill= {isActive ? 'var(--dodger-blue-dark)' : 'var(--background)'}
                             d="m 16300,12300.2 c -0.7,634 -829.1,2102.2 -1127.9,2571.4 -291,456.9 -773,402.8 -1415.2,448.1 -1785.8,126.2 -5482.24,136.6 -7214.7,-61.1 -709.35,-80.9 -722.41,-317.5 -1028.36,-867.1 -206.21,-370.5 -446.72,-839.5 -613,-1228.1 -414.87,-969.6 -310.45,-917.6 417.1,-966.3 1208.58,-81 2457.57,-71.7 3672.97,-65.7 1664.69,8.1 6003.99,-180.7 7309.09,168.8"
                         />
                     </g>
@@ -52,5 +53,4 @@ const ModernCarIcon: React.FC<IconProps> = ({
         </svg>
     );
 };
-
 export default ModernCarIcon;

@@ -19,6 +19,7 @@ const Navbar = ({ logo }: { logo?: React.ReactNode }) => {
     //* Handling signout
     const handleSignout = async () => {
         const res = await signOutUser();
+        console.log('Sign out res : ',res);
         if (res.success) {
             toast("See you soon!", { position: 'top-right', duration: 1900 });
             setTimeout(async () => {

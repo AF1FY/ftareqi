@@ -13,29 +13,25 @@ export default function FCMListener() {
     const queryClient = useQueryClient();
 
     useEffect(() => {
-        // We create an async setup function inside useEffect
         const setupNotificationListener = async () => {
             try {
                 const msg = await messaging();
-
-                // If messaging is not supported or not initialized, exit gracefully
                 if (!msg) return;
-
-                // Start listening for foreground messages
-                // unsubscribe is a function returned by Firebase to stop listening when the component unmounts
                 const unsubscribe = onMessage(msg, (payload) => {
+                    console.log('payload : ', payload); //* <---------------->
+                    
                     const title = payload.notification?.title || "New Notification";
                     const body = payload.notification?.body || "";
-
                     showNotification({
                         title,
                         body,
                         icon: <BellRing className="bell"/>
                     })
+                    queryClient.invalidateQueries({ queryKey: ['notifications'] });
                     queryClient.invalidateQueries({ queryKey: ['notifications' , 'unread-count'] });
+                    queryClient.invalidateQueries({ queryKey: ['notifications-infinite'] });
                 });
 
-                // Cleanup listener when component unmounts to prevent memory leaks
                 return () => {
                     unsubscribe();
                 };
@@ -43,10 +39,8 @@ export default function FCMListener() {
                 console.error("Error setting up FCM listener:", error);
             }
         };
-
         setupNotificationListener();
     }, [toast]);
 
-    // This component doesn't render anything to the screen directly
     return null;
 }

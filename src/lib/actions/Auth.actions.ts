@@ -3,6 +3,7 @@ import axios from "axios";
 import { LoginSchemaType, RegisterSchemaAPIType, ResetPasswordSchemaType, VerifyOTPSchemaType } from "../validators/auth.schema";
 import { AuthResponse, Tokens, VerifyOtpResponse } from "@/types/Auth";
 import { getAuthTokens } from "../token";
+import { postDataAsync } from "./Base.actions";
 const BASE_URL = process.env.BASE_URL;
 //* Registration
 export async function registerUser(user: RegisterSchemaAPIType): Promise<AuthResponse<null>> {
@@ -68,21 +69,22 @@ export async function loginUser(credentials: LoginSchemaType): Promise<AuthRespo
         };
     }
 }
-//* Sign out
-export async function signOutUser(): Promise<AuthResponse<null>> {
-    try {
-        const tokens = await getAuthTokens();
-        return await axios.post(`${BASE_URL}/api/Auth/logout`, { token: tokens?.refreshToken })
-            .then(response => {
-                return response.data;
-            })
-    } catch (error: any) {
-        return {
-            success: false,
-            message: error.response?.data?.message || "Operation failed",
-            errors: error.response?.data?.errors || [],
-        };
-    }
+//! Sign out
+export async function signOutUser() {
+    const tokens = await getAuthTokens();
+    // try {
+    //     return await axios.post(`${BASE_URL}/api/Auth/logout`, { token: tokens?.refreshToken })
+    //         .then(response => {
+    //             return response.data;
+    //         })
+    // } catch (error: any) {
+    //     return {
+    //         success: false,
+    //         message: error.response?.data?.message || "Signing out failed",
+    //         errors: error.response?.data?.errors || [],
+    //     };
+    // }
+    return await postDataAsync<undefined, { token?: string }>('api/Auth/logout', { token: tokens?.refreshToken}, 'Signing out failed');
 }
 //* Request otp for resetting password
 export async function requestOTPAsync(phoneNumber: string): Promise<AuthResponse<null>> {
@@ -99,7 +101,7 @@ export async function requestOTPAsync(phoneNumber: string): Promise<AuthResponse
         };
     }
 }
-//* Veerify otp to reset password
+//* Verify otp to reset password
 export async function verifyOtpToResetPasswordAsync(formData: VerifyOTPSchemaType): Promise<AuthResponse<VerifyOtpResponse>> {
     try {
         return await axios.post(`${BASE_URL}/api/Auth/password/reset/verify-otp`, formData)

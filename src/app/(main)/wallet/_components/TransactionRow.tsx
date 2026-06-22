@@ -7,36 +7,21 @@ import {
     ArrowUpRight,
     Clock,
     Calendar,
+    Lock,
+    LockOpen,
 } from 'lucide-react';
 const getTypeIcon = (type: ITransaction['type']) => {
     switch (type) {
         case TransactionType.RidePayment:
-            return <Car className="w-5 h-5 text-blue-600 dark:text-blue-400" />;
+            return <Car className="w-5 h-5 text-dodger-blue" />;
         case TransactionType.Deposit:
-            return <Wallet className="w-5 h-5 text-green-600 dark:text-green-400" />;
+            return <Wallet className="w-5 h-5 text-approved-t/80" />;
         case TransactionType.Withdrawal:
-            return <ArrowUpRight className="w-5 h-5 text-orange-600 dark:text-orange-400" />;
-    }
-};
-
-const getTypeBg = (type: ITransaction['type']) => {
-    switch (type) {
-        case TransactionType.RidePayment: return 'bg-blue-100 dark:bg-blue-900/30';
-        case TransactionType.Deposit: return 'bg-green-100 dark:bg-green-900/30';
-        case TransactionType.Withdrawal: return 'bg-orange-100 dark:bg-orange-900/30';
-    }
-};
-
-const getStatusColor = (status: TransactionStatus) => {
-    switch (status) {
-        case 'Completed':
-            return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
-        case 'Pending':
-            return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300';
-        case 'Failed':
-            return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
-        default:
-            return 'bg-slate-100 text-slate-800';
+            return <ArrowUpRight className="w-5 h-5" />;
+        case TransactionType.locked:
+            return <Lock className="w-5 h-5 text-pale-sky" />;
+        case TransactionType.Released:
+            return <LockOpen className="w-5 h-5" />;
     }
 };
 
@@ -49,13 +34,13 @@ const getStatusDot = (status: TransactionStatus) => {
     }
 };
 const TransactionRow = ({ transaction }: { transaction: ITransaction }) => {
-    const isPositive = transaction.type === TransactionType.Deposit;
+    const isPositive = transaction.type === TransactionType.Deposit ? true : transaction.type === TransactionType.Released;
 
     return (
         <tr className="hover:bg-white-athens-gray transition-colors cursor-pointer group">
             <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${getTypeBg(transaction.type)}`}>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center}`}>
                         {getTypeIcon(transaction.type)}
                     </div>
                     <div>
@@ -75,7 +60,7 @@ const TransactionRow = ({ transaction }: { transaction: ITransaction }) => {
                 </div>
             </td>
             <td className="px-6 py-4 whitespace-nowrap">
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(transaction.status)}`}>
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold}`}>
                     <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${getStatusDot(transaction.status)}`}></span>
                     {transaction.status}
                 </span>

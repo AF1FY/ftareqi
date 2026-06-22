@@ -11,7 +11,7 @@ export const getWalletAsync = async (): Promise<AuthResponse<IWallet>> =>
     getDataAsync<IWallet>(BASE_ENDPOINT)
 
 export const getTransactionsAsync = async (): Promise<AuthResponse<PaginatedData<ITransaction>>> => 
-    getPaginatedDataAsync<ITransaction>(`${BASE_ENDPOINT}/transactions`)
+    getPaginatedDataAsync<ITransaction, undefined>(`${BASE_ENDPOINT}/transactions`)
 
 export const addFundsAsync = async (body: ITopUpRequest , paymentMethod: PaymentMethod): Promise<AuthResponse<ITopUpResponse>> =>{
     const url = `${BASE_ENDPOINT}/top-up/${paymentMethod === 'wallet' ? 'mobile-wallet' : 'card'}`

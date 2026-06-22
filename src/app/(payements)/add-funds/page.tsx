@@ -33,7 +33,7 @@ export default function AddFunds() {
     }
 
     useEffect(() => {
-        getCurrentBalance
+        getCurrentBalance()
     }, [])
     
     // Handlers

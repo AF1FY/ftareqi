@@ -7,9 +7,9 @@ import {
 import { parseNotificationMetaData } from '@/lib/services/notificationService';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { AllNotificationMetadata, WalletTransactionMetadata, NotificationCategory, NotificationEventCode, AppNotification } from '@/types/Notifications';
-import { Bell, Car, Wallet, UserCheck } from "lucide-react";
-import { isToday, isYesterday } from 'date-fns';
+import { Bell, Wallet, UserCheck, Eye } from "lucide-react";
 import ModernCarIcon from '@/components/svg/ModernCarIcon';
+import { isToday, isYesterday } from '@/lib/services/walletService';
 
 export const categoryComponents: Record<NotificationCategory, React.ReactElement> = {
     [NotificationCategory.Ride]: (
@@ -24,6 +24,9 @@ export const categoryComponents: Record<NotificationCategory, React.ReactElement
     [NotificationCategory.System]: (
         <Bell size={28} className="rounded-full p-1" />
     ),
+    [NotificationCategory.Review]: (
+        <Eye size={28} className="rounded-full p-1" />
+    )
 };
 
 export const getNotifPreview = (category: NotificationCategory, metaData: AllNotificationMetadata): React.ReactElement => {
@@ -68,9 +71,8 @@ export function getNotificationTextColor(code: NotificationEventCode): string {
 export const groupNotificationsByDate = (notifications: AppNotification<AllNotificationMetadata>[]) => {
     const groups: Record<string, AppNotification<AllNotificationMetadata>[]> = { 'Today': [], 'Yesterday': [], 'Older': [] };
     notifications.forEach((notif) => {
-        const date = new Date(notif.createdAt);
-        if (isToday(date)) groups['Today'].push(notif);
-        else if (isYesterday(date)) groups['Yesterday'].push(notif);
+        if (isToday(notif.createdAt)) groups['Today'].push(notif);
+        else if (isYesterday(notif.createdAt)) groups['Yesterday'].push(notif);
         else groups['Older'].push(notif);
     });
     return groups;
@@ -139,11 +141,13 @@ export const useMarkAsRead = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['notifications'] });
+            queryClient.invalidateQueries({ queryKey: ['notifications', 'unread-count'] });
+            queryClient.invalidateQueries({ queryKey: ['notifications-infinite'] });
         },
     });
 };
 
-export const useMarkAllAsRead = () => {
+export const useMarkAllAsRead = ({setIsOpen}: {setIsOpen: (value: boolean) => void}) => {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -156,8 +160,10 @@ export const useMarkAllAsRead = () => {
             return response;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['notifications-infinite'] });
             queryClient.invalidateQueries({ queryKey: ['notifications', 'unread-count'] });
+            queryClient.invalidateQueries({ queryKey: ['notifications'] });
+            queryClient.invalidateQueries({ queryKey: ['notifications-infinite'] });
+            setIsOpen(false);
         },
     });
 };

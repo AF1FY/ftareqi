@@ -23,7 +23,8 @@ import { PassengerIcon } from '@/components/svg/PassengerIcon';
 import { DriverIcon } from '@/components/svg/DriverIcon';
 
 const Register = () => {
-  const [isPending, setIsPending] = useState(false)
+  const [isPending, setIsPending] = useState(false);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const { updatePhoneNumber , updateRole } = useContext(userContext);
   const maxDate = new Date();
   const router = useRouter()
@@ -147,7 +148,7 @@ const Register = () => {
               render={({ field }) => (
                 <FormItem className="flex flex-col w-full">
                   <FormLabel className='text-md'>Date of Birth</FormLabel>
-                  <Popover>
+                  <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button

@@ -9,8 +9,8 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { useGetNotifications, useMarkAsRead, useMarkAllAsRead, useGetUnreadCount, categoryComponents } from "@/app/(main)/notification/hooks/useNotifications";
-import { AllNotificationMetadata, AppNotification, NotificationCategory } from "@/types/Notifications";
+import { useGetNotifications, useMarkAsRead, useMarkAllAsRead, useGetUnreadCount, categoryComponents } from "@/app/(main)/notification/_hooks/useNotifications";
+import { AllNotificationMetadata, AppNotification } from "@/types/Notifications";
 import { getDateFormatted, getHourFormatted } from "@/lib/services/walletService";
 import { getNotificationRoute } from "@/lib/services/notificationService";
 
@@ -21,9 +21,10 @@ export default function NotificationBell() {
     const { data: notifications, isLoading } = useGetNotifications();
     const { data: unreadCount = 0, isLoading: unReadCountIsLoading } = useGetUnreadCount();
     const { mutate: markAsRead } = useMarkAsRead();
-    const { mutate: markAllAsRead } = useMarkAllAsRead();
+    const { mutate: markAllAsRead } = useMarkAllAsRead({setIsOpen});
 
     const handleNotificationClick = (notification: AppNotification<AllNotificationMetadata>) => {
+        // console.log("Clicked notification:", notification);
         if (!notification.isRead) {
             markAsRead(notification.id);
         }
@@ -42,7 +43,7 @@ export default function NotificationBell() {
                 >
                     <Bell className="relative size-5" />
 
-                    {/* Badge للإشعارات غير المقروءة */}
+                    {/* Badge for unread notifications */}
                     {!unReadCountIsLoading && unreadCount > 0 && (
                         <span className="absolute top-1 right-1 flex size-3.5 items-center justify-center rounded-full bg-dodger-blue text-[10px] font-bold text-white">
                             {unreadCount > 99 ? '99+' : unreadCount}

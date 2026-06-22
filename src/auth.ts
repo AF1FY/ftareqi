@@ -48,8 +48,6 @@ export const authOptions: NextAuthOptions = {
                 console.log("-------------📢 NEXTAUTH AUTHORIZE STARTED\n\n\n\n");
                 const { accessToken, refreshToken } = tokens as Tokens;
                 const { exp, sub , role , IsDriver }: { exp: number, sub: string , role: string , IsDriver: boolean } = jwtDecode(accessToken);
-                console.log('---------------- From JWT Decode --------------------');
-                console.log("Is driver : ", IsDriver );
                 return {
                     id: sub,
                     role,
@@ -75,9 +73,9 @@ export const authOptions: NextAuthOptions = {
                 token.expiresIn = user.expiresIn
                 token.isRefreshTokenExpired = user.isRefreshTokenExpired
             }
-            console.log('Date.now() < token?.expiresIn : ', Date.now() < token?.expiresIn);
-            console.log('Date.now() : ', Date.now());
-            console.log('token?.expiresIn : ', token?.expiresIn);
+            // console.log('Date.now() < token?.expiresIn : ', Date.now() < token?.expiresIn);
+            // console.log('Date.now() : ', Date.now());
+            // console.log('token?.expiresIn : ', token?.expiresIn);
             if (Date.now() < token?.expiresIn) {
                 return token;
             }

@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import ProfileCard from './components/profile-card'
-import ModeToggle from './components/mode-toggle'
-import PerformanceCard from './components/performance-card'
-import VehicleCard from './components/vehicle-card'
-import DocumentsCard from './components/documents-card'
+import ProfileCard from './_components/profile-card'
+import ModeToggle from './_components/mode-toggle'
+import PerformanceCard from './_components/performance-card'
+import VehicleCard from './_components/vehicle-card'
+import DocumentsCard from './_components/documents-card'
 import { useTheme } from 'next-themes'
 
 export default function ProfilePage() {

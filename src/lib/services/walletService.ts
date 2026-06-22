@@ -1,57 +1,51 @@
+import { getWalletAsync } from "../actions/Wallet.actions";
+
 export function ensureGMT(dateString?: string) {
     if (!dateString) return;
-
     let safeDateString = dateString;
-
-    // This regular expression checks if the string ends with 'Z' (GMT) 
-    // or has a timezone offset like '+02:00' or '-05:00' at the end.
     const hasTimezone = /(Z|[+-]\d{2}:\d{2})$/i.test(safeDateString);
-
     if (!hasTimezone) {
-        // If there is no timezone indicator, force it to be GMT/UTC
         safeDateString += 'Z';
     }
-
     const parsedDate = new Date(safeDateString);
-    
-    // Check for an invalid date
     if (isNaN(parsedDate.getTime())) return;
-
-    // Returns a valid JavaScript Date object that is securely anchored to GMT
     return parsedDate;
 }
 
 export function isToday(d?: string): boolean {
     const date = ensureGMT(d);
     if (!date) return false;
-    
     const currentDate = new Date();
-    
-    // We can simply compare the date strings to see if they fall on the same day
     return date.toDateString() === currentDate.toDateString();
 }
 
-export function getDateFormatted(d?: string) {
-    // ensureGMT returns a valid Date object, so we don't need 'new Date(date)' anymore
+export function isYesterday(d?: string): boolean {
     const date = ensureGMT(d);
-    if (!date) return;
-
+    if(!date) return false;
     const today = new Date();
-    
-    // Create a date object for exactly 24 hours ago (yesterday)
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
+    return date.toDateString() === yesterday.toDateString();
+}
 
-    // Compare just the date portions (ignores the time)
-    if (date.toDateString() === today.toDateString()) {
+export function isTomorrow(d?: string): boolean {
+    const date = ensureGMT(d);
+    if(!date) return false;
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    return date.toDateString() === tomorrow.toDateString();
+}
+
+export function getDateFormatted(d?: string) {
+    const date = ensureGMT(d);
+    if (!date) return;
+    if (isToday(d))
         return 'Today';
-    }
-
-    if (date.toDateString() === yesterday.toDateString()) {
+    if (isYesterday(d))
         return 'Yesterday';
-    }
-
-    // Fallback to the original formatting for older dates
+    if(isTomorrow(d))
+        return 'Tomorrow';
     return date.toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
@@ -62,13 +56,20 @@ export function getDateFormatted(d?: string) {
 export function getHourFormatted(d?: string) {
     const date = ensureGMT(d);
     if (!date) return;
-
-    // By explicitly setting the timeZone, it guarantees Egypt time 
-    // regardless of where the user or server is located!
     return date.toLocaleTimeString('en-EG', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: true,
         timeZone: 'Africa/Cairo'
     });
+}
+
+export const getFullDateFormatted = (d?: string) => `${getDateFormatted(d)} ${getHourFormatted(d)}`;
+
+export async function getBalanceAsync(): Promise<number> {
+    const res = await getWalletAsync();
+    if(res.success)
+        return res.data?.balance ?? 0;
+    console.error('Error getting user balance', res.message);
+    return 0
 }
