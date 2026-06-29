@@ -2,8 +2,10 @@
 @import "tw-animate-css";
 @custom-variant dark (&:is(.dark *));
 
-@utility full-scn {
-  min-height: calc(100vh - 64px);
+@layer utilities {
+  .full-scn {
+    min-height: calc(100vh - 64px);
+  }
 }
 
 @layer utilities {
@@ -206,4 +208,51 @@ button{
   display: inline-block;
   animation: bell-shake 0.8s ease-in-out 2;
   transform-origin: top center;
+}
+
+@layer utilities {
+  /* Hide scrollbars until scrolling */
+  html { scrollbar-width: none; }
+  html::-webkit-scrollbar { width: 0; height: 0; }
+
+  .glow-accent {
+    text-shadow: 0 0 24px rgba(59, 130, 246, 0.45), 0 0 60px rgba(59, 130, 246, 0.2);
+  }
+
+  /* Slow continuous pan for the topographic background */
+  @keyframes wave-pan {
+    0%   { transform: translateX(0) translateY(0); }
+    50%  { transform: translateX(-3%) translateY(-1.5%); }
+    100% { transform: translateX(0) translateY(0); }
+  }
+  .animate-wave-pan {
+    animation: wave-pan 28s ease-in-out infinite;
+  }
+
+  /* Diagonal light band sweeping across the masked logo every 3.5s */
+  .ft-logo-shine {
+    background: linear-gradient(
+      115deg,
+      transparent 38%,
+      rgba(255, 255, 255, 0.95) 50%,
+      transparent 62%
+    );
+    background-size: 250% 100%;
+    background-repeat: no-repeat;
+    mix-blend-mode: screen;
+    animation: logo-shine 3.5s ease-in-out infinite;
+  }
+  @keyframes logo-shine {
+    0%        { background-position: 160% 0; }
+    55%       { background-position: -60% 0; }
+    100%      { background-position: -60% 0; }
+  }
+
+  @keyframes float-y {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+  .animate-float {
+    animation: float-y 5s ease-in-out infinite;
+  }
 }

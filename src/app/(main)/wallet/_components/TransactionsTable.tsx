@@ -1,17 +1,22 @@
-'use client'
-import {
-    AlertCircle,
-    RefreshCcwIcon,
-} from 'lucide-react';
-import TransactionRow from './TransactionRow';
-import { useQuery } from '@tanstack/react-query';
-import { getTransactionsAsync } from '@/lib/actions/Wallet.actions';
-import styles from '../Wallet.module.css'
+"use client";
+import { AlertCircle, RefreshCcwIcon } from "lucide-react";
+import TransactionRow from "./TransactionRow";
+import { useQuery } from "@tanstack/react-query";
+import { getTransactionsAsync } from "@/lib/actions/Wallet.actions";
+import styles from "../Wallet.module.css";
 
-import ErrorState from '@/components/ErrorState';
-import Link from 'next/link';
-import Pagination from '@/components/ui/Pagination';
-// --- Component: Empty State ---
+import ErrorState from "@/components/ErrorState";
+import Link from "next/link";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/Pagination";
+import { useState } from "react";
+
+//? --- Empty State ---
 const EmptyState = () => (
     <tr>
         <td colSpan={4} className="px-6 py-12 text-center">
@@ -20,12 +25,17 @@ const EmptyState = () => (
                     <AlertCircle className="w-8 h-8 text-slate-400" />
                 </div>
                 <div className="space-y-1">
-                    <p className="text-lg font-medium text-slate-900 dark:text-white">No transactions found</p>
+                    <p className="text-lg font-medium text-slate-900 dark:text-white">
+                        No transactions found
+                    </p>
                     <p className="text-sm text-slate-500 dark:text-slate-400">
                         It looks like you haven't made any transactions yet.
                     </p>
                 </div>
-                <Link href={'/add-funds'} className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
+                <Link
+                    href={"/add-funds"}
+                    className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                >
                     Start New Transaction
                 </Link>
             </div>
@@ -35,29 +45,55 @@ const EmptyState = () => (
 
 // --- Main Component: Transactions List ---
 export default function TransactionsTable() {
-    const { data: res, isLoading, isError, error, refetch } = useQuery({
-        queryKey: ['transactions'],
+    const [page, setPage] = useState(1);
+    const pageSize = 10;
+
+    const {
+        data: res,
+        isLoading,
+        isError,
+        error,
+        refetch,
+    } = useQuery({
+        queryKey: ["transactions", page, pageSize],
         queryFn: async () => {
-            const res = await getTransactionsAsync();
+            const res = await getTransactionsAsync(page, pageSize);
             if (!res.success)
-                throw new Error(res?.message || res?.errors[0] || 'Failed to fetch transactions');
+                throw new Error(
+                    res?.message ||
+                        res?.errors?.[0] ||
+                        "Failed to fetch transactions",
+                );
             return res.data;
-        }
-    })
-    console.log('Transaction Response : ', res);
+        },
+    });
+
+    const totalPages = res?.totalPages || 1;
+    const startIndex = res?.page ? (res.page - 1) * pageSize + 1 : 0;
+    const endIndex = Math.min(
+        res?.page ? res.page * pageSize : 0,
+        res?.totalCount ?? 0,
+    );
+
     return (
         <>
             {/* Header */}
             <div className="my-4 p-1 flex justify-end">
-                <button onClick={() => refetch()} className="p-2 hover:text-dodger-blue border border-athens-gray rounded-lg bg-athens-gray cursor-pointer transition-colors">
-                    <RefreshCcwIcon size={20} className={`${isLoading ? `${styles.refreshSpin} text-dodger-blue` : ''}`} />
+                <button
+                    onClick={() => refetch()}
+                    className="p-2 hover:text-dodger-blue border border-athens-gray rounded-lg bg-athens-gray cursor-pointer transition-colors"
+                >
+                    <RefreshCcwIcon
+                        size={20}
+                        className={`${isLoading ? `${styles.refreshSpin} text-dodger-blue` : ""}`}
+                    />
                 </button>
             </div>
             <section className="w-full border-athens-gray bg-background rounded-xl shadow-lg shadow-black/10 dark:shadow-black/40 border flex flex-col overflow-hidden">
                 {/* Table Area */}
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
-                        <thead className='text-foreground text-md bg-athens-gray'>
+                        <thead className="text-foreground text-md bg-athens-gray">
                             <tr className="border-athens-gray border-b text-xs uppercase font-semibold tracking-wider">
                                 <th className="px-6 py-4">Transaction</th>
                                 <th className="px-6 py-4">Date & Time</th>
@@ -69,9 +105,12 @@ export default function TransactionsTable() {
                             <ErrorState error={error} refetch={refetch} />
                         ) : (
                             <tbody className="divide-y divide-athens-gray">
-                                {res?.items.length ?? 0 > 0 ? (
+                                {(res?.items.length ?? 0 > 0) ? (
                                     res?.items.map((transaction) => (
-                                        <TransactionRow key={transaction.id} transaction={transaction} />
+                                        <TransactionRow
+                                            key={transaction.id}
+                                            transaction={transaction}
+                                        />
                                     ))
                                 ) : (
                                     <EmptyState />
@@ -82,21 +121,60 @@ export default function TransactionsTable() {
                 </div>
             </section>
             {/* Pagination Section */}
-            <div className="flex items-center justify-between mt-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mt-6">
                 <p className="text-sm text-pale-sky ps-1">
-                    Showing <span className="text-foreground me-0.5 font-medium">
-                        {(res?.page ? (res.page - 1) * 10 + 1 : 0)}
+                    Showing{" "}
+                    <span className="text-foreground me-0.5 font-medium">
+                        {startIndex}
                     </span>
-                    to <span className="text-foreground me-0.5 font-medium">
-                        {Math.min(res?.page ? res.page * 10 : 0, res?.totalCount ?? 0)}
+                    to{" "}
+                    <span className="text-foreground me-0.5 font-medium">
+                        {endIndex}
                     </span>
-                    of <span className="text-foreground me-0.5 font-medium">
+                    of{" "}
+                    <span className="text-foreground me-0.5 font-medium">
                         {res?.totalCount ?? 0}
-                    </span> results
+                    </span>{" "}
+                    results
                 </p>
-                <Pagination totalPages={res?.totalPages ?? 0} />
-            </div>
+                {totalPages > 1 && (
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() =>
+                                        setPage(Math.max(1, page - 1))
+                                    }
+                                    className={
+                                        page === 1
+                                            ? "pointer-events-none opacity-50"
+                                            : "cursor-pointer"
+                                    }
+                                />
+                            </PaginationItem>
 
+                            <PaginationItem>
+                                <span className="text-sm font-medium mx-4">
+                                    Page {page} of {totalPages}
+                                </span>
+                            </PaginationItem>
+
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() =>
+                                        setPage(Math.min(totalPages, page + 1))
+                                    }
+                                    className={
+                                        page >= totalPages
+                                            ? "pointer-events-none opacity-50"
+                                            : "cursor-pointer"
+                                    }
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                )}
+            </div>
         </>
     );
 }

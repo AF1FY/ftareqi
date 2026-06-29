@@ -85,3 +85,43 @@ export async function postDataAsync<T,X>(API_URL: string ,body?: X, message?: st
         };
     }
 }
+
+export const updateDataAsync = async <T, X>(API_URL: string , body?: X, message?: string, errors?: string[]): Promise<AuthResponse<T>> => {
+    try{
+        const tokens = await getAuthTokens();
+        const res = await axios.put<Promise<AuthResponse<T>>>(`${BASE_URL}/${API_URL}`, body, {
+            headers: {
+                Authorization: `Bearer ${tokens?.accessToken}`,
+            },
+        })
+        return res.data;
+    }
+    catch (e: any) {
+        return {
+            success: false,
+            message: e.response?.data?.message ?? message ?? 'Operation Failed',
+            errors: e.response?.data?.errors ?? errors,
+            data: e.response?.data?.data
+        };
+    }
+}
+
+export const patchDataAsync = async <T,X>(API_URL: string, body?: X, message?: string, errors?: string[]): Promise<AuthResponse<T>> => {
+    try{
+        const tokens = await getAuthTokens();
+        const res = await axios.patch<Promise<AuthResponse<T>>>(`${BASE_URL}/${API_URL}`, body, {
+            headers: {
+                Authorization: `Bearer ${tokens?.accessToken}`,
+            },
+        })
+        return res.data;
+    }
+    catch (e: any) {
+        return {
+            success: false,
+            message: e.response?.data?.message ?? message ?? 'Operation Failed',
+            errors: e.response?.data?.errors ?? errors,
+            data: e.response?.data?.data
+        };
+    }
+}

@@ -31,7 +31,7 @@ const DriverDetails = ({ driverDetails }: { driverDetails: DriverDetailsType }) 
                     <h4 className="font-semibold text-foreground mb-3">Driver License Front</h4>
                     <div className='relative w-full aspect-video bg-pale-sky rounded-md overflow-hidden border border-border'>
                         <ZoomableImage
-                            src={driverDetails.driverLicenseFront}
+                            imageSrc={driverDetails.driverLicenseFront}
                             alt="driver license front"
                         />
                     </div>
@@ -42,7 +42,7 @@ const DriverDetails = ({ driverDetails }: { driverDetails: DriverDetailsType }) 
                     <h4 className="font-semibold text-foreground mb-3">Driver License Back</h4>
                     <div className='relative w-full aspect-video bg-pale-sky rounded-md overflow-hidden border border-border'>
                         <ZoomableImage
-                            src={driverDetails.driverLicenseBack}
+                            imageSrc={driverDetails.driverLicenseBack}
                             alt="driver license back"
                         />
                     </div>

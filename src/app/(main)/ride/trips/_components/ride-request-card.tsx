@@ -23,10 +23,9 @@ import { BookingStatus, DriverRequests } from "@/types/Ride";
 import { getRideRequestsStyle } from "@/lib/services/rideService";
 import { getFullNameLatters } from "@/lib/services/userProfileService";
 import {
-  getDateFormatted,
   getFullDateFormatted,
-  getHourFormatted,
 } from "@/lib/services/walletService";
+import styles from '../../Ride.module.css'
 
 interface RideRequestCardProps {
   request: DriverRequests;
@@ -46,8 +45,8 @@ export function RideRequestCard({
   const status = getRideRequestsStyle(request.status);
 
   return (
-    <Card className="shadow-sm border-border h-full flex flex-col">
-      <CardHeader className="flex flex-row items-center justify-between p-4 pb-4">
+    <Card className="shadow-sm border-border h-full flex flex-col gap-2 py-0">
+      <CardHeader className="flex flex-row items-center justify-between py-5 px-4">
         <div className="flex items-center gap-3">
           <Avatar className="h-11 w-11">
             <AvatarFallback className="bg-primary/10 text-primary">
@@ -122,7 +121,7 @@ export function RideRequestCard({
         </div>
       </CardContent>
 
-      <CardFooter className="flex gap-4 pt-4 border-t bg-muted/20 mt-auto justify-center">
+      <CardFooter className={`flex gap-4 pt-4 border-t bg-muted/20 mt-auto items-center justify-center ${styles.driverCardFooter}`}>
         {request.status === BookingStatus.Pending ? (
           <>
             <Button
@@ -132,7 +131,7 @@ export function RideRequestCard({
               disabled={isDeclining}
             >
               {isDeclining ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="me-2 h-4 w-4 animate-spin" />
               ) : (
                 "Decline"
               )}
@@ -143,7 +142,7 @@ export function RideRequestCard({
               disabled={isAccepting}
             >
               {isAccepting ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="me-2 h-4 w-4 animate-spin" />
               ) : (
                 "Accept"
               )}

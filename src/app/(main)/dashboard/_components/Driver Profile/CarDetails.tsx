@@ -25,7 +25,7 @@ const CarDetails = ({ carDetails }: { carDetails: CarDetailsType }) => {
           <h4 className="font-semibold text-foreground mb-3">Car Preview</h4>
           <div className='relative w-full aspect-video bg-pale-sky rounded-md overflow-hidden border border-border'>
             <ZoomableImage
-              src={carDetails.carPhoto}
+              imageSrc={carDetails.carPhoto}
               alt="driver license front"
             />
           </div>
@@ -36,7 +36,7 @@ const CarDetails = ({ carDetails }: { carDetails: CarDetailsType }) => {
           <h4 className="font-semibold text-foreground mb-3">Car License Front</h4>
           <div className='relative w-full aspect-video bg-pale-sky rounded-md overflow-hidden border border-border'>
             <ZoomableImage
-              src={carDetails.carLicenseFront}
+              imageSrc={carDetails.carLicenseFront}
               alt="driver license front"
             />
           </div>
@@ -47,7 +47,7 @@ const CarDetails = ({ carDetails }: { carDetails: CarDetailsType }) => {
           <h4 className="font-semibold text-foreground mb-3">Car License Back</h4>
           <div className='relative w-full aspect-video bg-pale-sky rounded-md overflow-hidden border border-border'>
             <ZoomableImage
-              src={carDetails.carLicenseFront}
+              imageSrc={carDetails.carLicenseFront}
               alt="driver license back"
             />
           </div>

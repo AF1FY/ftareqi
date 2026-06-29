@@ -124,3 +124,7 @@ ul li.linkSelected{
 .riderCardFooter{
     padding-block: 14px !important;
 }
+
+.driverCardFooter{
+    padding-block: 18px !important;
+}

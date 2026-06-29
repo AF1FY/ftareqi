@@ -7,6 +7,8 @@ import {
     Wallet,
     Navigation,
     Search,
+    Flag,
+    Ban,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Navbar from '@/components/Navbar';
@@ -37,14 +39,16 @@ const layout = ({
         <main className='flex max-h-screen bg-porcelain overflow-y-hidden'>
             <Sidebar expanded={expanded} toggleSidebar={toggleSidebar}>
                 <SidebarItem href='/home' icon={<Home size={20} />} text="Home" active={pathName.endsWith('/home')} />
-                <SidebarItem href='/dashboard/users' icon={<Users size={20} />} text="Users" active={pathName.endsWith('/users')} hidden={!isAdmin} />
-                <SidebarItem href='/dashboard/drivers' icon={<ModernCarIcon size={22} />} text="Driver profiles" active={pathName.endsWith('/drivers')} hidden={!isAdmin && !isModerator} />
                 <SidebarItem href='/wallet' icon={<Wallet size ={20} />} text = 'Wallet' active = {pathName.endsWith('/wallet')} />
                 <SidebarItem href='/notification' icon={<Bell size ={20} />} text = 'Notifications' active = {pathName.endsWith('/notification')} />
                 <SidebarItem href='/ride' icon={<Search size ={20} />} text = 'Search' active = {pathName.endsWith('/ride')} />
                 <SidebarItem href='/ride/trips' icon={<Navigation size ={20} />} text = 'Trips' active = {pathName.includes('/trips')} />
+                <SidebarItem href='/dashboard/users' icon={<Users size={20} />} text="Users" active={pathName.endsWith('/users')} hidden={!isAdmin} />
+                <SidebarItem href='/dashboard/drivers' icon={<ModernCarIcon size={22} />} text="Driver profiles" active={pathName.endsWith('/drivers')} hidden={!isAdmin && !isModerator} />
+                <SidebarItem href='/dashboard/reports' icon={<Flag size={22} />} text="Reports" active={pathName.endsWith('/reports')} hidden={!isAdmin && !isModerator} />
+                <SidebarItem href='/dashboard/ban' icon={<Ban size={22} />} text="Bans" active={pathName.endsWith('/ban')} hidden={!isAdmin && !isModerator} />
             </Sidebar>
-            <div className='flex-1 bg-white-athens-gray overflow-y-auto ps-18 md:ps-0'>
+            <div className='full-scn flex-1 bg-white-athens-gray overflow-y-auto ps-18 md:ps-0'>
                 <Navbar />
                 {children}
             </div>

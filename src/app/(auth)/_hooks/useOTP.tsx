@@ -43,7 +43,6 @@ export default function useOTP({
     };
 
     const handleVerify = async (code: string): Promise<AuthResponse<VerifyOtpResponse>> => {
-        console.log("Handle verify from use otp is invoked");
         setStatus({ message: 'Verifying code...', type: 'loading' });
         const res = await verifyFn(code, phone);
         setResetTrigger(prev => prev + 1);

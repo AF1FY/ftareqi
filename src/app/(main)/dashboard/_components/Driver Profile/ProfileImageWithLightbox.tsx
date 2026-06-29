@@ -2,25 +2,27 @@
 import React, { useState, useEffect } from "react";
 import { X, Camera } from "lucide-react";
 import type { StaticImageData } from "next/image";
-import NULL_PROFILE_PICTURE from '@/assets/generic_profile_picture.png'
+import NULL_PROFILE_PICTURE from "@/assets/generic_profile_picture.png";
+import Image from "next/image";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { getFullNameLatters } from "@/lib/services/userProfileService";
+import { isNull } from "util";
 
 interface ProfileImageWithLightboxProps {
-    src: string | StaticImageData;
-    alt: string;
+    userImage?: string;
     title?: string;
     subTitle?: string;
+    userName: string;
 }
 
 export const ProfileImageWithLightbox = ({
-    src = NULL_PROFILE_PICTURE,
-    alt,
+    userImage,
     title,
     subTitle,
+    userName,
 }: ProfileImageWithLightboxProps) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-    
-    const imageSrc = typeof src === 'string' ? src : src.src
+
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
             if (e.key === "Escape") setIsOpen(false);
@@ -41,31 +43,38 @@ export const ProfileImageWithLightbox = ({
                     onClick={() => setIsOpen(true)}
                     title="Click to expand"
                 >
-                    {isLoading && (
-                        <div className="absolute inset-0 bg-lavender-gray animate-pulse flex items-center justify-center z-10">
-                            <Camera className="size-8 text-pale-sky opacity-50" />
-                        </div>
+                    {userImage ? (
+                        <Image
+                            src={userImage}
+                            alt={title ?? userName}
+                            className="rounded-full object-cover size-24"
+                            width={96}
+                            height={96}
+                        />
+                    ) : (
+                        <Avatar className="h-11 w-11 cursor-pointer">
+                            <AvatarFallback className="bg-primary/10 text-primary">
+                                {getFullNameLatters(userName)}
+                            </AvatarFallback>
+                        </Avatar>
                     )}
-                    <img
-                        src={imageSrc}
-                        alt={alt}
-                        onLoad={() => setIsLoading(false)}
-                        className={`
-                        object-cover w-full h-full 
-                        transition-all duration-500 
-                        group-hover:scale-110 
-                        ${isLoading ? 'opacity-0 scale-100' : 'opacity-100'}
-                    `}
-                    />
                 </div>
 
                 <div className="text-center">
-                    {title && <h3 className="font-bold text-lg text-foreground capitalize">{title}</h3>}
-                    {subTitle && <p className="text-sm text-muted-foreground">{subTitle}</p>}
+                    {title && (
+                        <h3 className="font-bold text-lg text-foreground capitalize">
+                            {title}
+                        </h3>
+                    )}
+                    {subTitle && (
+                        <p className="text-sm text-muted-foreground">
+                            {subTitle}
+                        </p>
+                    )}
                 </div>
             </div>
 
-            {isOpen && !isLoading && (
+            {isOpen && userImage && (
                 <div
                     className="fixed inset-0 z-9999 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
                     onClick={() => setIsOpen(false)}
@@ -80,13 +89,15 @@ export const ProfileImageWithLightbox = ({
                         className="relative max-w-4xl max-h-[90vh] w-full flex flex-col items-center justify-center"
                         onClick={stopPropagation}
                     >
-                        <img
-                            src={imageSrc}
-                            alt={alt}
-                            className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+                        <Image
+                            src={userImage}
+                            alt={title ?? userName}
+                            className="object-cover"
+                            width={500}
+                            height={500}
                         />
                         <p className="mt-4 text-white text-xl font-semibold bg-black/50 px-4 py-2 rounded-full">
-                            {title}
+                            {userName}
                         </p>
                     </div>
                 </div>

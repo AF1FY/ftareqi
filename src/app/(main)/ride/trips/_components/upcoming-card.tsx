@@ -77,7 +77,7 @@ export default function DriverRideCard({
 
         <div className="relative w-full">
           <div className="flex gap-4 items-center justify-between">
-            <div className="flex gap-4 flex-1 items-center">
+            <div className="flex gap-2 flex-1 items-center">
               <div className="bg-background rounded-full size-2.5 border-2 border-foreground shrink-0" />
               <p className="font-normal leading-5 text-sm text-foreground">
                 {ride.startAddress}
@@ -97,7 +97,7 @@ export default function DriverRideCard({
 
           <div className="ms-1 border-s-2 border-dashed border-pale-sky/40 h-6"></div>
 
-          <div className="flex gap-4 items-center mt-1">
+          <div className="flex gap-2 items-center mt-1">
             <div className="bg-foreground rounded-full size-2.5 shrink-0" />
             <p className="font-normal leading-5 text-sm text-foreground">
               {ride.endAddress}

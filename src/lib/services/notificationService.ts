@@ -73,6 +73,7 @@ export const getNotificationRoute = (
       return "/wallet";
     case NotificationCategory.DriverRegistration:
       return "/profile";
+    case NotificationCategory.Review:
     case NotificationCategory.System:
     default:
       return "/notification";

@@ -25,6 +25,7 @@ import { TripPreferences } from "./../../../../types/Ride";
 import RidePreferences from "./RidePreferences";
 import RideRouteMapAction from "./RideRouteMapAction";
 import { bookRideAsync } from "@/lib/actions/Ride.actions";
+import { DriverProfileModal } from "../../profile/_components/DriverProfileModal";
 
 export function RideCard({
   ride,
@@ -109,13 +110,7 @@ export function RideCard({
         <div className="p-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <Image
-                src={ride.driverImgUrl}
-                alt={ride.driverName}
-                className="w-12 h-12 rounded-full object-cover"
-                width={48}
-                height={48}
-              />
+              <DriverProfileModal driverId={ride.driverUserId} driverName={ride.driverName} driverProfileImage={ride.driverImgUrl} />
               <div>
                 <p className="text-foreground font-semibold">
                   {ride.driverName}

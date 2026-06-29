@@ -6,10 +6,10 @@ import RecentRideCard from './_components/RecentRideCard';
 
 const recentRides: IRecentRideCard[] = [
     {
-        driverName: 'أحمد محمد',
+        driverName: 'Ahmed Mohamed',
         rideDate: '2026-10-24 08:30 AM',
-        rideSrc: 'ميدان التحرير، القاهرة',
-        rideDest: 'مول العرب، 6 أكتوبر',
+        rideSrc: 'Cairo',
+        rideDest: '6 of October',
         rideStatus: RideStatus.Completed ,
         rideAmount: '120.50'
     },
@@ -49,7 +49,7 @@ const Home = () => {
                             </div>
                         </Link>
                         {/* //? Find Ride */}
-                        <Link href={'/ride/search'} className='bg-background hover:shadow-sm duration-200 transition-all rounded-3xl py-5 flex items-center justify-center'>
+                        <Link href={'/ride'} className='bg-background hover:shadow-sm duration-200 transition-all rounded-3xl py-5 flex items-center justify-center'>
                             <div className="flex flex-col gap-1.5 justify-center items-center">
                                 <i className="fa-solid fa-magnifying-glass-location text-xl" />
                                 <strong>Find Ride</strong>

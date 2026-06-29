@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner"; // أو حسب مكتبة التوست المستخدمة
+import { toast } from "sonner";
 import { Role } from "@/types/User";
 import { removeRoleAsync } from "@/lib/actions/Admin.actions";
 import { Spinner } from "@/components/ui/spinner";
 
-// استيراد مكونات Shadcn Alert Dialog
 import {
     AlertDialog,
     AlertDialogAction,
@@ -30,14 +29,14 @@ export default function AssignedRolesSection({ userId, assignedRoles }: Assigned
     const [loadingRole, setLoadingRole] = useState<string | null>(null);
 
     const handleRemoveRole = async (role: Role) => {
-        setLoadingRole(role); // تفعيل اللودينج للرول المحدد فقط
+        setLoadingRole(role);
 
         try {
             const res = await removeRoleAsync(userId, role);
 
             if (res.success) {
                 toast.success(res.message, { position: 'top-right' });
-                router.refresh(); // تحديث الصفحة لجلب البيانات الجديدة من السيرفر
+                router.refresh();
             } else {
                 toast.error(res.message, { position: 'top-right' });
             }
@@ -62,7 +61,6 @@ export default function AssignedRolesSection({ userId, assignedRoles }: Assigned
                         >
                             <span>{role}</span>
 
-                            {/* استخدام Alert Dialog عند الضغط على زر الحذف */}
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
                                     <button
@@ -87,7 +85,6 @@ export default function AssignedRolesSection({ userId, assignedRoles }: Assigned
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
                                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        {/* عند الضغط على Continue يتم استدعاء دالة الحذف */}
                                         <AlertDialogAction
                                             onClick={() => handleRemoveRole(role)}
                                             className="bg-red-600 hover:bg-red-700 text-white"

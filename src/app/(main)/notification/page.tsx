@@ -20,7 +20,7 @@ export default function NotificationsPage() {
     isFetchingNextPage
   } = useGetInfiniteNotifications();
 
-  const { mutate: markAllAsRead } = useMarkAllAsRead();
+  const { mutate: markAllAsRead } = useMarkAllAsRead({});
   const { data: unreadCount = 0 } = useGetUnreadCount();
   const { mutate: markAsRead } = useMarkAsRead();
 

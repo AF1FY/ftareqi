@@ -1,39 +1,45 @@
-'use client'
-import { useState, useEffect, useCallback } from 'react'
-import { X, ZoomIn, ImageIcon } from 'lucide-react'
+"use client";
+import { useState, useEffect, useCallback } from "react";
+import { X, ZoomIn, ImageIcon } from "lucide-react";
 
-import Image, { StaticImageData } from 'next/image'
+import Image, { StaticImageData } from "next/image";
 interface ZoomableImageProps {
-    src: string | StaticImageData
-    alt: string
-    className?: string
+    imageSrc: string | StaticImageData | null | undefined;
+    alt: string;
+    className?: string;
 }
 
-export const ZoomableImage = ({ src, alt, className = 'w-full aspect-video rounded-md' }: ZoomableImageProps) => {
+export const ZoomableImage = ({
+    imageSrc,
+    alt,
+    className = "w-full aspect-video rounded-md",
+}: ZoomableImageProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [showSkeleton, setShowSkeleton] = useState(true);
-    const imageSrc = typeof src === 'string' ? src : src.src
+    const normalizedSrc =
+        typeof imageSrc === "string" ? imageSrc.trim() : imageSrc;
+    const hasValidImage = Boolean(normalizedSrc);
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        if (event.key === 'Escape') {
-            setIsOpen(false)
+        if (event.key === "Escape") {
+            setIsOpen(false);
         }
-    }, [])
+    }, []);
 
     useEffect(() => {
         if (isOpen) {
-            document.addEventListener('keydown', handleKeyDown)
-            document.body.style.overflow = 'hidden'
+            document.addEventListener("keydown", handleKeyDown);
+            document.body.style.overflow = "hidden";
         } else {
-            document.removeEventListener('keydown', handleKeyDown)
-            document.body.style.overflow = 'unset'
+            document.removeEventListener("keydown", handleKeyDown);
+            document.body.style.overflow = "unset";
         }
         return () => {
-            document.removeEventListener('keydown', handleKeyDown)
-            document.body.style.overflow = 'unset'
-        }
-    }, [isOpen, handleKeyDown])
+            document.removeEventListener("keydown", handleKeyDown);
+            document.body.style.overflow = "unset";
+        };
+    }, [isOpen, handleKeyDown]);
 
     const handleImageLoad = () => {
         setIsLoading(false);
@@ -55,21 +61,27 @@ export const ZoomableImage = ({ src, alt, className = 'w-full aspect-video round
                         <ImageIcon className="size-8 text-pale-sky opacity-50" />
                     </div>
                 )}
-                <Image
-                    src={imageSrc}
-                    alt={alt}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    onLoad={handleImageLoad}
-                    className={`
-                        object-cover 
-                        transition-all duration-500 
-                        group-hover:scale-110 
-                        ${isLoading ? 'opacity-0 scale-100' : 'opacity-100'}
-                    `}
-                />
+                {hasValidImage ? (
+                    <Image
+                        src={normalizedSrc as string | StaticImageData}
+                        alt={alt}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        onLoad={handleImageLoad}
+                        className={`
+                            object-cover 
+                            transition-all duration-500 
+                            group-hover:scale-110 
+                            ${isLoading ? "opacity-0 scale-100" : "opacity-100"}
+                        `}
+                    />
+                ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-lavender-gray text-pale-sky">
+                        <ImageIcon className="size-8 opacity-50" />
+                    </div>
+                )}
 
-                {!isLoading && (
+                {!isLoading && hasValidImage && (
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-foreground/20 transition-colors flex items-center justify-center z-20">
                         <ZoomIn className="text-white opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 drop-shadow-md" />
                     </div>
@@ -77,7 +89,7 @@ export const ZoomableImage = ({ src, alt, className = 'w-full aspect-video round
             </div>
 
             {/* 2. الـ Lightbox (Modal) */}
-            {isOpen && (
+            {isOpen && hasValidImage && (
                 <div
                     className="fixed inset-0 z-9999 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-in fade-in duration-200"
                     onClick={() => setIsOpen(false)}
@@ -95,7 +107,7 @@ export const ZoomableImage = ({ src, alt, className = 'w-full aspect-video round
                     >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <Image
-                            src={imageSrc}
+                            src={normalizedSrc as string | StaticImageData}
                             alt={alt}
                             fill
                             quality={100} // عشان تظهر بأعلى جودة لما نفتحها
@@ -107,5 +119,5 @@ export const ZoomableImage = ({ src, alt, className = 'w-full aspect-video round
                 </div>
             )}
         </>
-    )
-}
+    );
+};

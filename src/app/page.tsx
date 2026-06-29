@@ -1,15 +1,24 @@
-"use client"
-import Logo from "@/components/Logo";
-import Navbar from "@/components/Navbar";
-import { useSession } from "next-auth/react";
+"use client";
+import { FooterCTA } from "@/components/onboarding/footer-cta";
+import { Hero } from "@/components/onboarding/hero";
+import { HowItWorks } from "@/components/onboarding/how-it-works";
+import { OnBoardNavbar } from "@/components/onboarding/onBoard-navbar";
+import { TrustSafety } from "@/components/onboarding/trust-safety";
+import { ValueProps } from "@/components/onboarding/value-props";
+import { WavesBackground } from "@/components/onboarding/waves-background";
 
 export default function Home() {
-  return (
-    <>
-      <Navbar logo = {<Logo />} />
-      <div className="flex full-scn items-center justify-center bg-background">
-        <h1 className="text-6xl me-6">Home</h1>
-      </div>
-    </>
-  );
+    return (
+        <div className="relative min-h-screen w-full text-foreground">
+            <WavesBackground />
+            <OnBoardNavbar />
+            <main className="relative">
+                <Hero />
+                <ValueProps />
+                <HowItWorks />
+                <TrustSafety />
+                <FooterCTA />
+            </main>
+        </div>
+    );
 }

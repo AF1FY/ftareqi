@@ -30,9 +30,7 @@ const page = () => {
   });
 
   const onVerify = async (code: string) => {
-    console.log("On verify from page is invoked");
     const res = await handleVerify(code);
-    console.log(res);
     if (res?.success) {
       const tokens = { accessToken: res.data?.accessToken, refreshToken: res.data?.refreshToken };
       await signIn("credentials", {

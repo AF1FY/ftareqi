@@ -54,7 +54,7 @@ export interface TripPreferences {
 
 export interface RideSearchResposneDto extends Omit<CreateRideSchemaType, 'totalSeats' | 'waitingTimeMinutes' | 'ridePreferences'>, TripPreferences {
     rideId: number;
-    driverUserId?: number;
+    driverUserId: string;
     availableSeats: number;
     status: RideStatus;
     driverRate: number;

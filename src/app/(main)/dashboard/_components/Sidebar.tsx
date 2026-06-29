@@ -1,8 +1,7 @@
 'use client'
-import AsideLogo from '@/components/AsideLogo';
-import Logo from '@/components/Logo';
 import React from 'react'
 import AsideUser from './AsideUser';
+import Logo from '@/components/svg/Logo';
 
 function Sidebar({ children, expanded, toggleSidebar }:{ children:any, expanded:any, toggleSidebar:any }) {
     return (
@@ -15,9 +14,8 @@ function Sidebar({ children, expanded, toggleSidebar }:{ children:any, expanded:
                     title={expanded ? "Collapse sidebar" : "Expand sidebar"}
                 >
                     {/*//*  Project logo */}
-                    <div className="min-w-8 min-h-8 flex items-center justify-center rounded-lg shadow-md">
-                        {/* <LayoutDashboard size={20} /> */}
-                        <AsideLogo className='size-8' />
+                    <div className="min-w-8 min-h-8 flex items-center justify-center">
+                        <Logo className='size-7' />
                     </div>
 
                     {/*//* Project Name */}
@@ -25,7 +23,7 @@ function Sidebar({ children, expanded, toggleSidebar }:{ children:any, expanded:
                         className={`ml-3 font-bold text-lg whitespace-nowrap overflow-hidden transition-all duration-300 ${expanded ? "w-40 opacity-100" : "w-0 opacity-0"
                             }`}
                     >
-                        <Logo className='w-20' />
+                        <p className="uppercase font-bold text-xl">Ftareqi</p>
                     </div>
                 </div>
             </div>

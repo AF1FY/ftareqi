@@ -3,8 +3,11 @@ import { getRideStatusStyle } from "@/lib/services/rideService";
 import { getDateFormatted, getHourFormatted } from "@/lib/services/walletService";
 import { DriverPastRide } from "@/types/Ride";
 import { Calendar, Users, Clock, Star } from "lucide-react";
+import { RideReviewsListModal } from "./RideReviewsListModal";
+import { useState } from "react";
 
 export function PastDriverTripCard({ ride }: { ride: DriverPastRide }) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
     return (
         <div className="group flex flex-col gap-4 overflow-hidden rounded-2xl border border-border bg-card/40 p-4 transition-all hover:shadow-md">
             <div className="flex w-full items-center justify-between">
@@ -32,7 +35,7 @@ export function PastDriverTripCard({ ride }: { ride: DriverPastRide }) {
 
                 <div className="ms-1 h-6 border-s-2 border-dashed border-pale-sky/30" />
 
-                <div className="mt-1 flex items-center gap-4">
+                <div className="mt-1 flex items-center gap-2">
                     <div className="size-2.5 shrink-0 rounded-full bg-foreground" />
                     <p className="text-sm leading-5 text-foreground">{ride.endAddress}</p>
                 </div>
@@ -80,10 +83,12 @@ export function PastDriverTripCard({ ride }: { ride: DriverPastRide }) {
                     variant="outline"
                     size="sm"
                     className="rounded-full border-border bg-muted/40 px-4 hover:opacity-90"
+                    onClick={() => setIsModalOpen(true)}
                 >
                     View Reviews
                 </Button>
             </div>
+            <RideReviewsListModal rideId={ride.rideId} isOpen={isModalOpen} onOpenChange={setIsModalOpen} />
         </div>
     );
 }

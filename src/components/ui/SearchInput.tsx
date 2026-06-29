@@ -37,13 +37,27 @@
 // }
 "use client";
 
+import { useEffect, useState } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 
-export default function SearchInput() {
+interface SearchInputProps {
+    value?: string;
+    onSearch?: (value: string) => void;
+}
+
+export default function SearchInput({
+    value = "",
+    onSearch,
+}: SearchInputProps) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const router = useRouter();
+    const [inputValue, setInputValue] = useState(value);
+
+    useEffect(() => {
+        setInputValue(value);
+    }, [value]);
 
     const handleSearch = useDebouncedCallback((term: string) => {
         const params = new URLSearchParams(searchParams.toString());
@@ -56,25 +70,28 @@ export default function SearchInput() {
             params.delete("PhoneNumber");
         }
 
+        onSearch?.(term);
         router.push(`${pathname}?${params.toString()}`);
     }, 300);
 
     return (
         <div className="group relative w-full sm:w-72">
-
-            <div className="
+            <div
+                className="
         relative flex items-center w-full h-12 rounded-lg 
         bg-athens-gray
         border border-lavender-gray
         transition-all duration-300 ease-out
         group-focus-within:ring-2 group-focus-within:ring-pale-sky
-        ">
-
-                <div className="
+        "
+            >
+                <div
+                    className="
         absolute left-3 flex items-center justify-center text-pale-sky pointer-events-none
         transition-all duration-300 ease-in-out
         group-focus-within:-translate-x-4 group-focus-within:opacity-0
-        ">
+        "
+                >
                     <span className="material-symbols-outlined">search</span>
                 </div>
 
@@ -90,8 +107,12 @@ export default function SearchInput() {
             pl-10 group-focus-within:pl-4
         "
                     placeholder="Search by Phone Number..."
-                    defaultValue={searchParams.get("PhoneNumber")?.toString()}
-                    onChange={(e) => handleSearch(e.target.value)}
+                    value={inputValue}
+                    onChange={(e) => {
+                        const nextValue = e.target.value;
+                        setInputValue(nextValue);
+                        handleSearch(nextValue);
+                    }}
                 />
             </div>
         </div>

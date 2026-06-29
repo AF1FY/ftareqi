@@ -67,8 +67,8 @@ const layout = () => {
                 {/*//* Profile picture and Name  */}
                 <div className="flex items-center gap-4">
                     <ProfileImageWithLightbox
-                        src={driverDetails.driverPhoto}
-                        alt='driver profile picture'
+                        userImage={driverDetails.driverPhoto}
+                        userName={driverDetails.fullName}
                     />
                     <h2 className="text-xl font-bold">{driverDetails.fullName ?? 'Joe Doe'}</h2>
                 </div>

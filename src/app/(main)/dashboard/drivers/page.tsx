@@ -10,7 +10,6 @@ export default function DriversRequestsPage() {
   const [descending, setDescending] = useState(true);
   const router = useRouter();
 
-  // 1. إضافة refetch لاستخدامه في زر "Try Again"
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['pendingDrivers', page, pageSize, descending],
     queryFn: async () => {
@@ -51,7 +50,7 @@ export default function DriversRequestsPage() {
   };
 
   return (
-    <div className="p-8 min-h-screen">
+    <div className="p-8 full-scn">
       <div className="container">
         {/*//* Header */}
         <div className="flex flex-col md:flex-row gap-y-2 md:gap-y-0 items-start justify-between md:items-center-safe mb-6">
@@ -90,8 +89,8 @@ export default function DriversRequestsPage() {
             </div>
           ) : (
             /*//* 2. Table Area */
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-athens-gray">
+            <div className="overflow-hidden rounded-md border border-athens-gray bg-background">
+              <table className="min-w-full divide-y divide-athens-gray bg-athens-gray">
                 <thead className="bg-athens-gray/10">
                   <tr className='uppercase tracking-wider'>
                     <th className="px-6 py-3 text-left w-1/3">Full Name</th>
@@ -150,7 +149,7 @@ export default function DriversRequestsPage() {
                   {/*//~ Empty State */}
                   {!isLoading && data?.items?.length === 0 && (
                     <tr>
-                      <td colSpan={3} className="flex-col px-6 py-12 text-center text-pale-sky rounded-b-full">
+                      <td colSpan={3} className="flex-col px-6 py-12 text-center text-pale-sky">
                         <i className="block mb-4 text-4xl fa-regular fa-folder-open"></i>
                         <div>No pending requests found.</div>
                       </td>

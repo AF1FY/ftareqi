@@ -34,9 +34,9 @@ export default async function Page(props: IPageProps) {
   const allRoles: Role[] = [Role.User, Role.Moderator, Role.Admin];
   const availableRoles: Role[] = allRoles.filter(r => !user.roles.includes(r));
   return (
-    <div className="relative flex min-h-screen w-full bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+    <div className="relative flex full-scn w-full bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
       {/* Main Content */}
-      <main className="flex-1 p-8">
+      <div className="flex-1 p-8">
         <div className="mx-auto max-w-4xl">
 
           {/* Breadcrumbs */}
@@ -58,8 +58,8 @@ export default async function Page(props: IPageProps) {
             <div className="flex w-full flex-col gap-4 @container @[520px]:flex-row @[520px]:items-center">
               <div className="flex items-center gap-5">
                 <ProfileImageWithLightbox
-                  src={user?.image ?? NULL_PROFILE_PICTURE}
-                  alt={`Profile picture of ${user?.fullName}`}
+                  userImage={user?.image}
+                  userName={user.fullName}
                 />
 
                 <div className="flex flex-col justify-center">
@@ -73,36 +73,12 @@ export default async function Page(props: IPageProps) {
               </div>
             </div>
           </div>
-
-          {/* Assigned Roles Section - Static for now */}
-          {/* <div className="bg-background rounded-xl p-6 border border-athens-gray mb-8">
-            <h2 className=" text-[22px] font-bold leading-tight tracking-[-0.015em] pb-4">
-              Assigned Roles
-            </h2>
-            <div className="flex flex-wrap gap-3">
-              {user?.roles.length ?? 0 > 0 ? (
-                user?.roles.map((role, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 rounded-full bg-dodger-blue/10 text-dodger-blue px-3 py-1 text-sm font-medium cursor-pointer group"
-                  >
-                    <span className='text-md'>{role}</span>
-                    <button className="transition-colors cursor-pointer group-hover:text-rejected-t">
-                      <i className="fa-solid fa-xmark mt-1"/>
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <p className="text-pale-sky text-sm">No roles assigned to this user.</p>
-              )}
-            </div>
-          </div> */}
           <AssignedRolesSection userId={user.id} assignedRoles={user.roles} />
 
           {/* Add New Role Section - Static for now */}
               <AddRoleSection userID={user.id} availableRoles={availableRoles}/>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

@@ -34,9 +34,9 @@ const Register = () => {
   const form = useForm<RegisterSchemaType>({
     mode: 'onSubmit',
     defaultValues: {
-      fullName: 'Ahmed Hisham',
-      phoneNumber: '01121276769',
-      password: 'User@123',
+      fullName: '',
+      phoneNumber: '',
+      password: '',
       gender: 1,
       role: 1,
     },
@@ -45,12 +45,10 @@ const Register = () => {
 
   //* Registration
   async function handleRegister(user: RegisterSchemaType) {
-    console.log(user);
-    
     setIsPending(true);
+
     try {
       const res = await registerUser(mapToRegistration(user))
-      console.log(res);
 
       if (res.success) {
         toast.success(res.message, { duration: 7000, position: 'top-right' });

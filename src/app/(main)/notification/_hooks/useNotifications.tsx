@@ -147,7 +147,7 @@ export const useMarkAsRead = () => {
     });
 };
 
-export const useMarkAllAsRead = ({setIsOpen}: {setIsOpen: (value: boolean) => void}) => {
+export const useMarkAllAsRead = ({setIsOpen}: {setIsOpen?: (value: boolean) => void}) => {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -163,7 +163,8 @@ export const useMarkAllAsRead = ({setIsOpen}: {setIsOpen: (value: boolean) => vo
             queryClient.invalidateQueries({ queryKey: ['notifications', 'unread-count'] });
             queryClient.invalidateQueries({ queryKey: ['notifications'] });
             queryClient.invalidateQueries({ queryKey: ['notifications-infinite'] });
-            setIsOpen(false);
+            if(setIsOpen)
+                setIsOpen(false);
         },
     });
 };

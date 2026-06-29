@@ -1,13 +1,14 @@
 import { CarDetailsType } from "./Moderator";
+import { IGender } from "./User";
 
 export enum DriverStatus {
   PENDING = "Pending",
   ACTIVE = "Active",
   REJECTED = "Rejected",
   SUSPENDED = "Suspended",
-  PendingImageUpload = 'Pending Image Upload',
-  ImageUploadFailed = 'Image Upload Failed',
-  EXPIRED = 'Expired'
+  PendingImageUpload = "Pending Image Upload",
+  ImageUploadFailed = "Image Upload Failed",
+  EXPIRED = "Expired",
 }
 
 export enum CarColor {
@@ -43,13 +44,15 @@ export const CAR_COLORS_MAP: Record<CarColor, string> = {
 };
 
 export interface DriverDetails {
-  id: number,
-  licenseExpiryDate: string,
-  status: DriverStatus,
-  createdAt: string,
-  driverProfilePhoto: string,
-  driverLicenseFront: string,
-  driverLicenseBack: string
+  id: number;
+  licenseExpiryDate: string;
+  status: DriverStatus;
+  createdAt: string;
+  driverProfilePhoto: string;
+  driverLicenseFront: string;
+  driverLicenseBack: string;
+  tripsOfferedCount: number;
+  rating: number
 }
 
 export interface CarDetails extends CarDetailsType {
@@ -68,4 +71,16 @@ export interface AuthResponse<T = null> {
   message: string;
   errors?: unknown[] | Record<string, string[]>;
   data?: T;
+}
+
+export interface IDriverProfileModal {
+  name: string;
+  gender: IGender;
+  joinedAt: string;
+  driverImg: string;
+  rating: number;
+  tripsTaken: number;
+  carImg: string;
+  carModel: string;
+  carPlate: string;
 }
